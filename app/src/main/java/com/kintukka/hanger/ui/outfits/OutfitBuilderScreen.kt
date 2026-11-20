@@ -1,5 +1,9 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.components.bleedHorizontally
+import androidx.compose.foundation.shape.CircleShape
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -318,12 +322,16 @@ fun OutfitBuilderScreen(navController: NavHostController, outfitId: Long, date: 
                 }
             }
 
-            Surface(color = MaterialTheme.colorScheme.surfaceContainerLow, tonalElevation = 1.dp) {
-                Column(Modifier.navigationBarsPadding().padding(vertical = 10.dp)) {
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                shadowElevation = 12.dp,
+            ) {
+                Column(Modifier.navigationBarsPadding().padding(top = 14.dp, bottom = 10.dp)) {
                     LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(pickerCategories, key = { it.name }) { c ->
                             val count = closet.count { it.category == c }
-                            if (count > 0) FilterChip(selected = category == c, onClick = { category = c }, label = { Text(c.label) })
+                            if (count > 0) HangerFilterChip(selected = category == c, onClick = { category = c }, label = { Text(c.label) })
                         }
                     }
                     val tray = closet.filter { it.category == category }
@@ -336,7 +344,7 @@ fun OutfitBuilderScreen(navController: NavHostController, outfitId: Long, date: 
                             val inOutfit = state.placements.any { it.itemId == item.id }
                             ItemTile(
                                 item,
-                                modifier = Modifier.width(84.dp).alpha(if (item.status == GarmentStatus.CLEAN) 1f else 0.55f),
+                                modifier = Modifier.width(88.dp).alpha(if (item.status == GarmentStatus.CLEAN) 1f else 0.55f),
                                 selected = inOutfit,
                                 onClick = { vm.toggle(item) },
                             )
@@ -354,32 +362,32 @@ fun OutfitBuilderScreen(navController: NavHostController, outfitId: Long, date: 
                 Text("Save outfit", style = MaterialTheme.typography.headlineSmall)
                 OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 Text("Occasion", style = MaterialTheme.typography.labelLarge)
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(horizontal = 24.dp), modifier = Modifier.bleedHorizontally(24.dp)) {
                     items(Occasion.entries, key = { it.name }) { o ->
-                        FilterChip(selected = state.occasion == o, onClick = { vm.setOccasion(if (state.occasion == o) null else o) }, label = { Text(o.label) })
+                        HangerFilterChip(selected = state.occasion == o, onClick = { vm.setOccasion(if (state.occasion == o) null else o) }, label = { Text(o.label) })
                     }
                 }
                 val day = date ?: LocalDate.now()
                 val future = day.isAfter(LocalDate.now())
                 if (entryId > 0) {
-                    Button(onClick = { saving = false; vm.save(name, plan = false, wear = false) }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+                    Button(onClick = { saving = false; vm.save(name, plan = false, wear = false) }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                         Text("Update this look")
                     }
                     return@Column
                 }
-                Button(onClick = { saving = false; vm.save(name, plan = false, wear = false) }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+                Button(onClick = { saving = false; vm.save(name, plan = false, wear = false) }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                     Text("Save to outfits")
                 }
                 if (future) {
-                    OutlinedButton(onClick = { saving = false; vm.save(name, plan = true, wear = false) }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+                    OutlinedButton(onClick = { saving = false; vm.save(name, plan = true, wear = false) }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                         Text("Save & plan for ${day.shortLabel()}")
                     }
                 } else {
-                    OutlinedButton(onClick = { saving = false; vm.save(name, plan = false, wear = true) }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+                    OutlinedButton(onClick = { saving = false; vm.save(name, plan = false, wear = true) }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                         Text(if (day == LocalDate.now()) "Save & wear today" else "Save & log for ${day.shortLabel()}")
                     }
                     if (date != null) {
-                        OutlinedButton(onClick = { saving = false; vm.save(name, plan = true, wear = false) }, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+                        OutlinedButton(onClick = { saving = false; vm.save(name, plan = true, wear = false) }, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                             Text("Save & plan for ${day.shortLabel()}")
                         }
                     }
@@ -448,8 +456,20 @@ fun EvaluationStrip(evaluation: OutfitEvaluation?, modifier: Modifier = Modifier
         Spacer(modifier.height(4.dp))
         return
     }
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    val score = evaluation.score.toFloat().coerceIn(0f, 1f)
+    val tone = when {
+        score >= 0.6f -> HangerTokens.extras.success
+        score >= 0.45f -> HangerTokens.extras.warning
+        else -> MaterialTheme.colorScheme.error
+    }
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier.size(36.dp).clip(CircleShape).background(tone.copy(alpha = 0.14f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("${(score * 100).toInt()}", style = MaterialTheme.typography.labelLarge, color = tone)
+            }
             Text(
                 when {
                     evaluation.score >= 0.8 -> "Looks great"
@@ -457,12 +477,16 @@ fun EvaluationStrip(evaluation: OutfitEvaluation?, modifier: Modifier = Modifier
                     evaluation.score >= 0.45 -> "Could work"
                     else -> "A bit of a clash"
                 },
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.width(110.dp),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 10.dp).width(96.dp),
             )
             LinearProgressIndicator(
-                progress = { evaluation.score.toFloat().coerceIn(0f, 1f) },
-                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(3.dp)),
+                progress = { score },
+                modifier = Modifier.weight(1f).height(6.dp).clip(CircleShape),
+                color = tone,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                gapSize = 0.dp,
+                drawStopIndicator = {},
             )
         }
         (evaluation.warnings.take(2).map { it to true } + evaluation.notes.take(2).map { it to false }).take(3).forEach { (text, warning) ->

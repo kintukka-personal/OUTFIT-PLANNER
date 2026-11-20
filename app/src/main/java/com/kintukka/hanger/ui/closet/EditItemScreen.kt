@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -236,8 +238,8 @@ fun EditItemScreen(navController: NavHostController, id: Long) {
             Row(Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 val e = state.entity
                 if (e?.originalImageFile != null && e.imageFile != null) {
-                    FilterChip(selected = !e.useOriginalImage, onClick = { vm.useOriginal(false) }, label = { Text("Cut-out") })
-                    FilterChip(selected = e.useOriginalImage, onClick = { vm.useOriginal(true) }, label = { Text("Original") })
+                    HangerFilterChip(selected = !e.useOriginalImage, onClick = { vm.useOriginal(false) }, label = { Text("Cut-out") })
+                    HangerFilterChip(selected = e.useOriginalImage, onClick = { vm.useOriginal(true) }, label = { Text("Original") })
                 }
                 Spacer(Modifier.weight(1f))
                 if (e?.originalImageFile != null) {

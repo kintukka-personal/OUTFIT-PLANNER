@@ -1,5 +1,8 @@
 package com.kintukka.hanger.ui.settings
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -597,7 +600,7 @@ private fun TempUnitToggle(selected: TempUnit, onSelect: (TempUnit) -> Unit) {
                 TempUnit.CELSIUS -> "°C" to "Celsius"
                 TempUnit.FAHRENHEIT -> "°F" to "Fahrenheit"
             }
-            SegmentedButton(
+            HangerSegmentedButton(
                 selected = selected == unit,
                 onClick = { onSelect(unit) },
                 shape = SegmentedButtonDefaults.itemShape(index = index, count = TempUnit.entries.size),
@@ -656,7 +659,7 @@ private fun CurrencyRow(selected: String, onSelect: (String) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Currencies.forEach { (symbol, name) ->
-                FilterChip(
+                HangerFilterChip(
                     selected = selected == symbol,
                     onClick = { onSelect(symbol) },
                     label = {

@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -417,7 +419,7 @@ fun TripEditScreen(navController: NavHostController, id: Long) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Occasion.entries.forEach { occasion ->
                         val selected = occasion in form.occasions
-                        FilterChip(
+                        HangerFilterChip(
                             selected = selected,
                             onClick = { vm.toggleOccasion(occasion) },
                             enabled = !state.busy,

@@ -1,5 +1,10 @@
 package com.kintukka.hanger.ui.closet
 
+import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material3.FilledTonalButton
+import com.kintukka.hanger.ui.components.bleedHorizontally
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -198,7 +204,7 @@ fun ItemDetailScreen(navController: NavHostController, id: Long) {
                     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                         val options = listOf(GarmentStatus.CLEAN to "Clean", GarmentStatus.DIRTY to "Laundry", GarmentStatus.AWAY to "Away")
                         options.forEachIndexed { i, (status, label) ->
-                            SegmentedButton(
+                            HangerSegmentedButton(
                                 selected = e.status == status,
                                 onClick = { vm.setStatus(status) },
                                 shape = SegmentedButtonDefaults.itemShape(i, options.size),
@@ -207,26 +213,28 @@ fun ItemDetailScreen(navController: NavHostController, id: Long) {
                     }
                 }
                 item(key = "stats") {
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        StatPill("Times worn", item.wears.toString(), Modifier.weight(1f))
-                        StatPill("Last worn", item.lastWorn?.relativeLabel() ?: "Never", Modifier.weight(1f))
-                        StatPill("Cost / wear", item.costPerWear?.let { formatMoney(it, state.currency) } ?: "—", Modifier.weight(1f))
+                    com.kintukka.hanger.ui.components.EqualRow {
+                        StatPill("Times worn", item.wears.toString(), Modifier.weight(1f).fillMaxHeight())
+                        StatPill("Last worn", item.lastWorn?.relativeLabel() ?: "Never", Modifier.weight(1f).fillMaxHeight())
+                        StatPill("Cost / wear", item.costPerWear?.let { formatMoney(it, state.currency) } ?: "—", Modifier.weight(1f).fillMaxHeight())
                     }
                 }
             }
             item(key = "actions") {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(onClick = { navController.navigate(SuggestRoute(anchorItemId = id)) }, modifier = Modifier.weight(1f).height(48.dp)) {
+                    Button(onClick = { navController.navigate(SuggestRoute(anchorItemId = id)) }, modifier = Modifier.weight(1f).height(52.dp)) {
                         Icon(Icons.Outlined.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Style it")
                     }
-                    OutlinedButton(onClick = { navController.navigate(BuilderRoute(itemIds = id.toString())) }, modifier = Modifier.weight(1f).height(48.dp)) {
+                    OutlinedButton(onClick = { navController.navigate(BuilderRoute(itemIds = id.toString())) }, modifier = Modifier.weight(1f).height(52.dp)) {
+                        Icon(Icons.Outlined.Dashboard, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
                         Text("Build around it")
                     }
                 }
                 if (!e.wishlist) {
-                    TextButton(onClick = vm::logWornToday, modifier = Modifier.padding(top = 4.dp)) {
+                    FilledTonalButton(onClick = vm::logWornToday, modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(52.dp)) {
                         Icon(Icons.Outlined.EventAvailable, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Wore it today")
@@ -267,7 +275,7 @@ fun ItemDetailScreen(navController: NavHostController, id: Long) {
                 item(key = "outfits") {
                     Column {
                         SectionHeader("In ${state.outfits.size} outfit${if (state.outfits.size == 1) "" else "s"}")
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 8.dp)) {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 8.dp, start = 20.dp, end = 20.dp), modifier = Modifier.bleedHorizontally()) {
                             items(state.outfits, key = { it.id }) { o ->
                                 Column(Modifier.width(120.dp).clickable { navController.navigate(OutfitRoute(o.id)) }) {
                                     OutfitCollage(o.placements, state.itemsById, Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium)

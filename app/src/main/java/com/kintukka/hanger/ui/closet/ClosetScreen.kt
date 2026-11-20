@@ -1,5 +1,13 @@
 package com.kintukka.hanger.ui.closet
 
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
+import com.kintukka.hanger.ui.components.bleedHorizontally
+import com.kintukka.hanger.ui.components.HangerFilterChip
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -196,7 +204,7 @@ fun ClosetScreen(navController: NavHostController) {
 
     Box(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(104.dp),
+            columns = GridCells.Adaptive(96.dp),
             contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 96.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -242,17 +250,17 @@ fun ClosetScreen(navController: NavHostController) {
                     Spacer(Modifier.height(14.dp))
                     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                         ClosetView.entries.forEachIndexed { index, view ->
-                            SegmentedButton(
+                            HangerSegmentedButton(
                                 selected = state.filters.view == view,
                                 onClick = { vm.update { it.copy(view = view, category = null) } },
                                 shape = SegmentedButtonDefaults.itemShape(index, ClosetView.entries.size),
                             ) { Text(view.label) }
                         }
                     }
-                    Spacer(Modifier.height(10.dp))
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Spacer(Modifier.height(12.dp))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(horizontal = 20.dp), modifier = Modifier.bleedHorizontally()) {
                         item(key = "all") {
-                            FilterChip(
+                            HangerFilterChip(
                                 selected = state.filters.category == null,
                                 onClick = { vm.update { it.copy(category = null) } },
                                 label = { Text("All ${state.counts[null] ?: 0}") },
@@ -261,7 +269,7 @@ fun ClosetScreen(navController: NavHostController) {
                         items(pickerCategories, key = { it.name }) { c ->
                             val count = state.counts[c] ?: 0
                             if (count > 0 || state.filters.category == c) {
-                                FilterChip(
+                                HangerFilterChip(
                                     selected = state.filters.category == c,
                                     onClick = { vm.update { it.copy(category = if (it.category == c) null else c) } },
                                     label = { Text("${c.label} $count") },
@@ -269,26 +277,29 @@ fun ClosetScreen(navController: NavHostController) {
                             }
                         }
                         item(key = "clean") {
-                            FilterChip(selected = state.filters.onlyClean, onClick = { vm.update { it.copy(onlyClean = !it.onlyClean) } }, label = { Text("Clean only") })
+                            HangerFilterChip(selected = state.filters.onlyClean, onClick = { vm.update { it.copy(onlyClean = !it.onlyClean) } }, label = { Text("Clean only") })
                         }
                         item(key = "fav") {
-                            FilterChip(selected = state.filters.favourites, onClick = { vm.update { it.copy(favourites = !it.favourites) } }, label = { Text("Favourites") })
+                            HangerFilterChip(selected = state.filters.favourites, onClick = { vm.update { it.copy(favourites = !it.favourites) } }, label = { Text("Favourites") })
                         }
                     }
                     if (state.dirtyCount > 0 && state.filters.view == ClosetView.WARDROBE) {
                         Surface(
                             color = MaterialTheme.colorScheme.surfaceContainer,
-                            shape = MaterialTheme.shapes.medium,
-                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                            shape = MaterialTheme.shapes.large,
+                            modifier = Modifier.fillMaxWidth().padding(top = 14.dp),
                         ) {
-                            Row(Modifier.padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp))
+                            Row(Modifier.padding(start = 12.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                                    contentAlignment = Alignment.Center,
+                                ) { Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp)) }
                                 Text(
                                     "${plural(state.dirtyCount, "piece")} in the laundry",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    modifier = Modifier.weight(1f).padding(start = 10.dp),
+                                    modifier = Modifier.weight(1f).padding(start = 12.dp),
                                 )
-                                TextButton(onClick = vm::washAll) { Text("Mark all washed") }
+                                FilledTonalButton(onClick = vm::washAll, modifier = Modifier.height(40.dp)) { Text("Mark all washed") }
                             }
                         }
                     }

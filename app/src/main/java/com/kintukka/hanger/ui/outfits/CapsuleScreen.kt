@@ -1,11 +1,13 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.components.bleedHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -168,9 +170,9 @@ fun CapsuleScreen(navController: NavHostController, id: Long) {
             }
             item(span = { GridItemSpan(maxLineSpan) }, key = "stats") {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        StatPill("Pieces", state.members.size.toString(), Modifier.weight(1f))
-                        StatPill("Outfits it makes", state.outfitCount?.toString() ?: "—", Modifier.weight(1f))
+                    com.kintukka.hanger.ui.components.EqualRow {
+                        StatPill("Pieces", state.members.size.toString(), Modifier.weight(1f).fillMaxHeight())
+                        StatPill("Outfits it makes", state.outfitCount?.toString() ?: "—", Modifier.weight(1f).fillMaxHeight())
                     }
                     Button(onClick = vm::startEditing) { Text(if (state.members.isEmpty()) "Choose pieces" else "Edit pieces") }
                 }
@@ -184,7 +186,7 @@ fun CapsuleScreen(navController: NavHostController, id: Long) {
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 10.dp)) {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(top = 10.dp, start = 20.dp, end = 20.dp), modifier = Modifier.bleedHorizontally()) {
                             rowItems(state.boosts, key = { it.first.id }) { (item, gain) ->
                                 ItemTile(item, Modifier.width(96.dp), badge = "+$gain", showName = true, onClick = { vm.add(item.id) })
                             }

@@ -25,6 +25,9 @@ a connection (apart from the weather forecast).
   <img src="docs/screenshots/20_guide_formulas.png" width="200" alt="Style guide: outfit formulas">
   <img src="docs/screenshots/21_guide_trends.png" width="200" alt="Style guide: trends">
 </p>
+<p align="center">
+  <img src="docs/screenshots/tablet_closet.png" width="820" alt="Tablet layout with navigation rail">
+</p>
 
 ## Install it on your phone
 
@@ -101,7 +104,7 @@ CI publish signed builds add two repository secrets: `HANGER_KEYSTORE_BASE64` (t
 
 | Layer | Tech |
 |---|---|
-| UI | Kotlin, Jetpack Compose, Material 3, Navigation Compose (type-safe routes), Instrument Serif + Inter |
+| UI | Kotlin, Jetpack Compose, Material 3, Navigation Compose (type-safe routes), Instrument Serif + Inter; adaptive shell (bottom bar on phones, navigation rail and centred content on tablets, foldables and landscape) and a small design system in `ui/components/DesignSystem.kt` |
 | Data | Room (items, outfits + canvas placements, calendar entries, trips, packing, capsules), DataStore |
 | Styling engine | Pure-Kotlin `:engine` module: colour naming/harmony, weather advisor, outfit evaluator & generator, shuffle, feedback learning, packing planner, stats, capsule maths — 105 unit tests |
 | Images | ML Kit Subject Segmentation (Play services) + Image Labeling, Coil |

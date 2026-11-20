@@ -4,8 +4,36 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.kintukka.hanger.ui.components.Hanger
+import com.kintukka.hanger.ui.components.LocalWindowWidth
+import com.kintukka.hanger.ui.components.WindowWidth
+import com.kintukka.hanger.ui.components.windowWidthFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Checkroom
@@ -109,42 +137,96 @@ fun HangerNavHost(navController: NavHostController = rememberNavController()) {
     val backStack by navController.currentBackStackEntryAsState()
     val destination = backStack?.destination
     val onTopLevel = tabs.any { tab -> destination?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true }
+    val isSelected: (Tab) -> Boolean = { tab -> destination?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true }
+    val go: (Tab) -> Unit = { tab ->
+        navController.navigate(tab.route) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0),
-        bottomBar = {
-            if (onTopLevel) {
-                NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerLow) {
-                    tabs.forEach { tab ->
-                        val selected = destination?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(tab.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
+    BoxWithConstraints(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        val widthClass = windowWidthFor(maxWidth)
+        // Rail on tablets/foldables, and on phones in landscape where a bottom bar eats scarce height.
+        val useRail = widthClass != WindowWidth.Compact || (maxWidth > maxHeight && maxHeight < 480.dp)
+        CompositionLocalProvider(LocalWindowWidth provides widthClass) {
+            Row(Modifier.fillMaxSize()) {
+                if (useRail && onTopLevel) {
+                    NavigationRail(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        modifier = Modifier.fillMaxHeight(),
+                        windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start),
+                    ) {
+                        Spacer(Modifier.weight(1f))
+                        tabs.forEach { tab ->
+                            val selected = isSelected(tab)
+                            NavigationRailItem(
+                                selected = selected,
+                                onClick = { go(tab) },
+                                icon = { Icon(if (selected) tab.selectedIcon else tab.icon, contentDescription = null) },
+                                label = { Text(tab.label) },
+                                modifier = Modifier.testTag("tab-${tab.label}").padding(vertical = 4.dp),
+                                colors = NavigationRailItemDefaults.colors(
+                                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                                ),
+                            )
+                        }
+                        Spacer(Modifier.weight(1f))
+                    }
+                    VerticalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                }
+                Scaffold(
+                    contentWindowInsets = WindowInsets(0),
+                    modifier = Modifier.weight(1f),
+                    bottomBar = {
+                        if (!useRail && onTopLevel) {
+                            Column {
+                                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                                NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerLow, tonalElevation = 0.dp) {
+                                    tabs.forEach { tab ->
+                                        val selected = isSelected(tab)
+                                        NavigationBarItem(
+                                            selected = selected,
+                                            onClick = { go(tab) },
+                                            icon = { Icon(if (selected) tab.selectedIcon else tab.icon, contentDescription = null) },
+                                            label = { Text(tab.label, style = MaterialTheme.typography.labelMedium.copy(letterSpacing = 0.2.sp)) },
+                                            modifier = Modifier.testTag("tab-${tab.label}"),
+                                            colors = NavigationBarItemDefaults.colors(
+                                                indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                                selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            ),
+                                        )
+                                    }
                                 }
-                            },
-                            icon = { Icon(if (selected) tab.selectedIcon else tab.icon, contentDescription = null) },
-                            label = { Text(tab.label) },
-                            modifier = Modifier.testTag("tab-${tab.label}"),
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                                selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            ),
-                        )
+                            }
+                        }
+                    },
+                ) { padding ->
+                    Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.TopCenter) {
+                        HangerNavGraph(navController, Modifier.widthIn(max = Hanger.MaxContentWidth).fillMaxSize())
                     }
                 }
             }
-        },
-    ) { padding ->
+        }
+    }
+}
+
+@Composable
+private fun HangerNavGraph(navController: NavHostController, modifier: Modifier) {
         NavHost(
             navController = navController,
             startDestination = TodayRoute,
-            modifier = Modifier.padding(padding),
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() },
+            modifier = modifier,
+            enterTransition = { fadeIn(tween(220)) + slideInVertically(tween(260)) { it / 40 } },
+            exitTransition = { fadeOut(tween(160)) },
+            popEnterTransition = { fadeIn(tween(220)) },
+            popExitTransition = { fadeOut(tween(160)) + slideOutVertically(tween(200)) { it / 40 } },
         ) {
             composable<TodayRoute> { TodayScreen(navController) }
             composable<ClosetRoute> { ClosetScreen(navController) }
@@ -179,6 +261,5 @@ fun HangerNavHost(navController: NavHostController = rememberNavController()) {
                 val r = it.toRoute<SuggestRoute>()
                 SuggestScreen(navController, r.dateEpoch.toDateOrNull(), r.anchorItemId.takeIf { id -> id > 0 })
             }
-        }
     }
 }
