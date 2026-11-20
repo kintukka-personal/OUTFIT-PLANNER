@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.components
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.ui.layout.layout
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -17,8 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -90,7 +90,7 @@ fun HangerFilterChip(
         modifier = modifier,
         enabled = enabled,
         leadingIcon = leadingIcon ?: if (selected) {
-            { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize)) }
+            { Icon(HangerIcons.Check, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize)) }
         } else null,
         trailingIcon = trailingIcon,
         shape = CircleShape,
@@ -122,7 +122,7 @@ fun SingleChoiceSegmentedButtonRowScope.HangerSegmentedButton(
     shape: Shape,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    icon: @Composable () -> Unit = { SegmentedButtonDefaults.Icon(selected) },
+    icon: @Composable () -> Unit = { SegmentedCheck(selected) },
     label: @Composable () -> Unit,
 ) {
     val cs = MaterialTheme.colorScheme
@@ -211,4 +211,27 @@ fun Modifier.bleedHorizontally(gutter: Dp = Hanger.Gutter): Modifier = layout { 
     )
     val width = if (constraints.hasBoundedWidth) constraints.maxWidth else placeable.width
     layout(width, placeable.height) { placeable.place(-gutter.roundToPx(), 0) }
+}
+
+/** The segmented-button check from Hanger's icon set, scaling in when selected (replaces Material's built-in glyph). */
+@Composable
+private fun SegmentedCheck(selected: Boolean) {
+    androidx.compose.animation.AnimatedVisibility(
+        visible = selected,
+        enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.scaleIn(),
+        exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.scaleOut(),
+    ) {
+        Icon(HangerIcons.Check, contentDescription = null, modifier = Modifier.size(SegmentedButtonDefaults.IconSize))
+    }
+}
+
+/** Dropdown arrow from Hanger's icon set that flips when the menu is open. */
+@Composable
+fun DropdownArrow(expanded: Boolean) {
+    val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "dropdown-arrow")
+    Icon(
+        HangerIcons.ChevronDown,
+        contentDescription = null,
+        modifier = Modifier.size(20.dp).graphicsLayer { rotationZ = rotation },
+    )
 }

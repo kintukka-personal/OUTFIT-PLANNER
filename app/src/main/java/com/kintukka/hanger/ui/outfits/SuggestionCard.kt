@@ -1,6 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
-import androidx.compose.material.icons.filled.Bookmark
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
@@ -15,13 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.BookmarkAdd
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.ThumbDown
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -77,7 +71,7 @@ fun SuggestionCard(
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { onReact(if (reaction == Reaction.LIKED) Reaction.NONE else Reaction.LIKED) }) {
                     Icon(
-                        if (reaction == Reaction.LIKED) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                        if (reaction == Reaction.LIKED) HangerIcons.ThumbUpFilled else HangerIcons.ThumbUp,
                         contentDescription = "More like this",
                         tint = if (reaction == Reaction.LIKED) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp),
@@ -85,7 +79,7 @@ fun SuggestionCard(
                 }
                 IconButton(onClick = { onReact(if (reaction == Reaction.DISLIKED) Reaction.NONE else Reaction.DISLIKED) }) {
                     Icon(
-                        if (reaction == Reaction.DISLIKED) Icons.Filled.ThumbDown else Icons.Outlined.ThumbDown,
+                        if (reaction == Reaction.DISLIKED) HangerIcons.ThumbDownFilled else HangerIcons.ThumbDown,
                         contentDescription = "Less like this",
                         tint = if (reaction == Reaction.DISLIKED) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp),
@@ -93,14 +87,14 @@ fun SuggestionCard(
                 }
                 IconButton(onClick = onSave, enabled = !saved) {
                     Icon(
-                        if (saved) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
+                        if (saved) HangerIcons.BookmarkFilled else HangerIcons.BookmarkAdd,
                         contentDescription = if (saved) "Saved" else "Save outfit",
                         tint = if (saved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp),
                     )
                 }
                 IconButton(onClick = onEdit) {
-                    Icon(Icons.Outlined.Edit, contentDescription = "Edit on canvas", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
+                    Icon(HangerIcons.Edit, contentDescription = "Edit on canvas", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
                 }
                 Spacer(Modifier.weight(1f))
                 Button(onClick = onPrimary, modifier = Modifier.height(44.dp), contentPadding = PaddingValues(horizontal = 18.dp)) { Text(primaryLabel) }

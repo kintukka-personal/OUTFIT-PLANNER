@@ -1,6 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
-import androidx.compose.material.icons.outlined.Dashboard
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.material3.FilledTonalButton
 import com.kintukka.hanger.ui.components.bleedHorizontally
 import com.kintukka.hanger.ui.components.HangerSegmentedButton
@@ -24,14 +25,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EventAvailable
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -146,20 +139,20 @@ fun ItemDetailScreen(navController: NavHostController, id: Long) {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
                     if (item != null) {
                         IconButton(onClick = vm::toggleFavorite) {
                             Icon(
-                                if (item.entity.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                if (item.entity.favorite) HangerIcons.HeartFilled else HangerIcons.Heart,
                                 contentDescription = if (item.entity.favorite) "Remove from favourites" else "Add to favourites",
                                 tint = if (item.entity.favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                             )
                         }
-                        IconButton(onClick = { navController.navigate(EditItemRoute(id)) }) { Icon(Icons.Outlined.Edit, contentDescription = "Edit") }
+                        IconButton(onClick = { navController.navigate(EditItemRoute(id)) }) { Icon(HangerIcons.Edit, contentDescription = "Edit") }
                         Box {
-                            IconButton(onClick = { menu = true }) { Icon(Icons.Outlined.MoreVert, contentDescription = "More options") }
+                            IconButton(onClick = { menu = true }) { Icon(HangerIcons.More, contentDescription = "More options") }
                             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                                 if (item.entity.wishlist) {
                                     DropdownMenuItem(text = { Text("I bought it — move to closet") }, onClick = { menu = false; vm.moveToCloset() })
@@ -223,19 +216,19 @@ fun ItemDetailScreen(navController: NavHostController, id: Long) {
             item(key = "actions") {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(onClick = { navController.navigate(SuggestRoute(anchorItemId = id)) }, modifier = Modifier.weight(1f).height(52.dp)) {
-                        Icon(Icons.Outlined.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(HangerIcons.Sparkle, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Style it")
                     }
                     OutlinedButton(onClick = { navController.navigate(BuilderRoute(itemIds = id.toString())) }, modifier = Modifier.weight(1f).height(52.dp)) {
-                        Icon(Icons.Outlined.Dashboard, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(HangerIcons.Canvas, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Build around it")
                     }
                 }
                 if (!e.wishlist) {
                     FilledTonalButton(onClick = vm::logWornToday, modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(52.dp)) {
-                        Icon(Icons.Outlined.EventAvailable, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(HangerIcons.CalendarCheck, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Wore it today")
                     }

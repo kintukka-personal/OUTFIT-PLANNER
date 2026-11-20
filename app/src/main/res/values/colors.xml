@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="paper">#FFFAF7F4</color>
-    <color name="ink">#FF1A1614</color>
-    <color name="rose">#FFBE185D</color>
+    <color name="paper">#FFF8F4F0</color>
+    <color name="ink">#FF1C1715</color>
+    <color name="rose">#FFB0124F</color>
     <color name="rose_deep">#FF9D174D</color>
     <color name="icon_cream">#FFFDF2F8</color>
+    <color name="icon_gold">#FFF2C27A</color>
 </resources>

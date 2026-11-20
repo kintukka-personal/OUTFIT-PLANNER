@@ -4,7 +4,7 @@
     <path android:pathData="M0,0h108v108h-108z">
         <aapt:attr xmlns:aapt="http://schemas.android.com/aapt" name="android:fillColor">
             <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="108" android:endY="108"
-                android:startColor="#FFC2185B" android:endColor="#FF831843" />
+                android:startColor="#FFC4205F" android:endColor="#FF6E0A31" />
         </aapt:attr>
     </path>
 </vector>

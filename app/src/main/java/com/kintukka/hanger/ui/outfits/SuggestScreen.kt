@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.bleedHorizontally
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.layout.layout
@@ -17,11 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -213,10 +210,10 @@ fun SuggestScreen(navController: NavHostController, date: LocalDate?, anchorItem
             TopAppBar(
                 title = { Text(if (state.anchor != null) "Style it" else "Ideas") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
-                    IconButton(onClick = vm::more) { Icon(Icons.Outlined.Refresh, contentDescription = "More ideas") }
+                    IconButton(onClick = vm::more) { Icon(HangerIcons.Refresh, contentDescription = "More ideas") }
                 },
             )
         },
@@ -236,7 +233,7 @@ fun SuggestScreen(navController: NavHostController, date: LocalDate?, anchorItem
                 }
                 state.suggestions.isEmpty() -> item(key = "empty") {
                     EmptyState(
-                        icon = Icons.Outlined.AutoAwesome,
+                        icon = HangerIcons.Sparkle,
                         title = "Not enough to work with",
                         body = if (state.closetSize < 3) "Add at least a top, a bottom and some shoes and ideas will appear here."
                         else "Everything suitable is in the laundry or out of season. Try another occasion or mark a few things washed.",
@@ -258,7 +255,7 @@ fun SuggestScreen(navController: NavHostController, date: LocalDate?, anchorItem
                     }
                     item(key = "more") {
                         OutlinedButton(onClick = vm::more, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-                            Icon(Icons.Outlined.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(HangerIcons.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                             Text("Show me different ideas", modifier = Modifier.padding(start = 8.dp))
                         }
                     }
@@ -290,7 +287,7 @@ fun SuggestHeader(state: SuggestState, onOccasion: (Occasion) -> Unit, onClearAn
                 onClick = { onClearAnchor?.invoke() },
                 label = { Text("Built around ${anchor.name}") },
                 leadingIcon = { ItemImage(anchor, Modifier.size(24.dp)) },
-                trailingIcon = if (onClearAnchor != null) ({ Icon(Icons.Outlined.Close, contentDescription = "Stop building around this item", modifier = Modifier.size(16.dp)) }) else null,
+                trailingIcon = if (onClearAnchor != null) ({ Icon(HangerIcons.Close, contentDescription = "Stop building around this item", modifier = Modifier.size(16.dp)) }) else null,
             )
         }
         LazyRow(

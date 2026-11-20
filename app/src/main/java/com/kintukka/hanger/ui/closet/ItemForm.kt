@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -14,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -228,7 +228,7 @@ private fun <T> SelectField(
             readOnly = true,
             singleLine = true,
             label = { Text(label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { com.kintukka.hanger.ui.components.DropdownArrow(expanded = expanded) },
             modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -249,7 +249,7 @@ private fun <T> SelectField(
     }
 }
 
-private val CheckIcon: @Composable () -> Unit = { Icon(Icons.Filled.Check, contentDescription = null) }
+private val CheckIcon: @Composable () -> Unit = { Icon(HangerIcons.Check, contentDescription = null) }
 
 /**
  * Multi-select colour dropdown, up to 3 in order (1 = main colour). The menu stays open while
@@ -267,7 +267,7 @@ fun ColorPicker(selected: List<FashionColor>, onChange: (List<FashionColor>) -> 
             singleLine = true,
             label = { Text("Colours") },
             leadingIcon = if (selected.isEmpty()) null else ({ SwatchStack(selected) }),
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { com.kintukka.hanger.ui.components.DropdownArrow(expanded = expanded) },
             supportingText = { Text("Up to 3 · the first is the main colour") },
             modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
         )

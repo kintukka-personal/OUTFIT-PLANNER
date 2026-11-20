@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,22 +30,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.outlined.Notes
-import androidx.compose.material.icons.automirrored.outlined.Undo
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Bookmarks
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.DesignServices
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EventAvailable
-import androidx.compose.material.icons.outlined.Luggage
-import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -249,7 +235,7 @@ fun DayScreen(navController: NavHostController, date: LocalDate) {
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(HangerIcons.Back, contentDescription = "Back")
                     }
                 },
                 title = {
@@ -269,10 +255,10 @@ fun DayScreen(navController: NavHostController, date: LocalDate) {
                 },
                 actions = {
                     IconButton(onClick = { goToDay(date.minusDays(1)) }) {
-                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Previous day")
+                        Icon(HangerIcons.ChevronLeft, contentDescription = "Previous day")
                     }
                     IconButton(onClick = { goToDay(date.plusDays(1)) }) {
-                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Next day")
+                        Icon(HangerIcons.ChevronRight, contentDescription = "Next day")
                     }
                 },
             )
@@ -291,7 +277,7 @@ fun DayScreen(navController: NavHostController, date: LocalDate) {
                 if (state.looks.isEmpty()) {
                     item(key = "empty") {
                         EmptyState(
-                            icon = Icons.Outlined.EventAvailable,
+                            icon = HangerIcons.CalendarCheck,
                             title = if (date.isBefore(today)) "Nothing logged" else "Nothing planned yet",
                             body = if (date.isBefore(today)) {
                                 "Add what you wore and it counts towards your wear stats."
@@ -367,7 +353,7 @@ fun DayScreen(navController: NavHostController, date: LocalDate) {
     state.outfits.firstOrNull { it.id == pendingOutfitId }?.let { outfit ->
         AlertDialog(
             onDismissRequest = { pendingOutfitId = 0L },
-            icon = { Icon(Icons.Outlined.CheckCircle, contentDescription = null) },
+            icon = { Icon(HangerIcons.CheckCircle, contentDescription = null) },
             title = { Text(if (date == today) "Wearing it today?" else "Did you wear it?") },
             text = {
                 Text(
@@ -393,7 +379,7 @@ fun DayScreen(navController: NavHostController, date: LocalDate) {
     state.looks.firstOrNull { it.entry.id == pendingRemoveId }?.let { look ->
         AlertDialog(
             onDismissRequest = { pendingRemoveId = 0L },
-            icon = { Icon(Icons.Outlined.DeleteOutline, contentDescription = null) },
+            icon = { Icon(HangerIcons.Delete, contentDescription = null) },
             title = { Text("Remove this look?") },
             text = {
                 Text(
@@ -515,7 +501,7 @@ private fun LookCard(
                                 .heightIn(min = 32.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Icon(Icons.Outlined.Luggage, contentDescription = null, tint = scheme.primary, modifier = Modifier.size(16.dp))
+                            Icon(HangerIcons.Luggage, contentDescription = null, tint = scheme.primary, modifier = Modifier.size(16.dp))
                             Spacer(Modifier.width(6.dp))
                             Text(
                                 look.tripName,
@@ -543,13 +529,13 @@ private fun LookCard(
                     val toggleModifier = Modifier.weight(1f, fill = false)
                     if (entry.worn) {
                         OutlinedButton(onClick = onToggleWorn, modifier = toggleModifier) {
-                            Icon(Icons.AutoMirrored.Outlined.Undo, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(HangerIcons.Undo, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
                             Text("Not worn", maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                     } else {
                         FilledTonalButton(onClick = onToggleWorn, modifier = toggleModifier) {
-                            Icon(Icons.Outlined.CheckCircle, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(HangerIcons.CheckCircle, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
                             Text("Mark as worn", maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
@@ -559,10 +545,10 @@ private fun LookCard(
                 }
                 Row {
                     IconButton(onClick = onEdit) {
-                        Icon(Icons.Outlined.Edit, contentDescription = "Edit look", tint = scheme.onSurfaceVariant)
+                        Icon(HangerIcons.Edit, contentDescription = "Edit look", tint = scheme.onSurfaceVariant)
                     }
                     IconButton(onClick = onRemove) {
-                        Icon(Icons.Outlined.DeleteOutline, contentDescription = "Remove look", tint = scheme.error)
+                        Icon(HangerIcons.Delete, contentDescription = "Remove look", tint = scheme.error)
                     }
                 }
             }
@@ -598,7 +584,7 @@ private fun NoteField(entryId: Long, savedNote: String, onSave: (String) -> Unit
             .fillMaxWidth()
             .onFocusChanged { if (!it.isFocused) commit() },
         placeholder = { Text("Add a note: where you wore it, how it felt") },
-        leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Notes, contentDescription = null) },
+        leadingIcon = { Icon(HangerIcons.Notes, contentDescription = null) },
         textStyle = MaterialTheme.typography.bodyMedium,
         maxLines = 4,
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
@@ -621,10 +607,10 @@ private data class AddAction(
 @Composable
 private fun AddLookGrid(onSuggest: () -> Unit, onPickSaved: () -> Unit, onBuild: () -> Unit, onShuffle: () -> Unit) {
     val actions = listOf(
-        AddAction(Icons.Outlined.AutoAwesome, "Get suggestions", "Weather-aware picks", highlight = true, onClick = onSuggest),
-        AddAction(Icons.Outlined.Bookmarks, "Pick a saved outfit", "From your outfits", highlight = false, onClick = onPickSaved),
-        AddAction(Icons.Outlined.DesignServices, "Build an outfit", "Arrange pieces yourself", highlight = false, onClick = onBuild),
-        AddAction(Icons.Outlined.Shuffle, "Shuffle", "Let chance decide", highlight = false, onClick = onShuffle),
+        AddAction(HangerIcons.Sparkle, "Get suggestions", "Weather-aware picks", highlight = true, onClick = onSuggest),
+        AddAction(HangerIcons.Bookmarks, "Pick a saved outfit", "From your outfits", highlight = false, onClick = onPickSaved),
+        AddAction(HangerIcons.Canvas, "Build an outfit", "Arrange pieces yourself", highlight = false, onClick = onBuild),
+        AddAction(HangerIcons.Shuffle, "Shuffle", "Let chance decide", highlight = false, onClick = onShuffle),
     )
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         actions.chunked(2).forEach { row ->
@@ -687,7 +673,7 @@ private fun SavedOutfitSheet(
             Spacer(Modifier.height(12.dp))
             if (outfits.isEmpty()) {
                 EmptyState(
-                    icon = Icons.Outlined.Style,
+                    icon = HangerIcons.Outfit,
                     title = "No saved outfits yet",
                     body = "Outfits you build or save from suggestions show up here.",
                     action = {

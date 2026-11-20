@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,18 +30,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Autorenew
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Luggage
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -271,7 +261,7 @@ fun TripScreen(navController: NavHostController, id: Long) {
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(HangerIcons.Back, contentDescription = "Back")
                     }
                 },
                 title = {
@@ -283,12 +273,12 @@ fun TripScreen(navController: NavHostController, id: Long) {
                     if (trip != null) {
                         Box {
                             IconButton(onClick = { menuOpen = true }) {
-                                Icon(Icons.Filled.MoreVert, contentDescription = "More options")
+                                Icon(HangerIcons.More, contentDescription = "More options")
                             }
                             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                                 DropdownMenuItem(
                                     text = { Text("Edit trip") },
-                                    leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
+                                    leadingIcon = { Icon(HangerIcons.Edit, contentDescription = null) },
                                     onClick = {
                                         menuOpen = false
                                         navController.navigate(TripEditRoute(id))
@@ -296,7 +286,7 @@ fun TripScreen(navController: NavHostController, id: Long) {
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Regenerate plan") },
-                                    leadingIcon = { Icon(Icons.Outlined.Autorenew, contentDescription = null) },
+                                    leadingIcon = { Icon(HangerIcons.Refresh, contentDescription = null) },
                                     enabled = !regenerating,
                                     onClick = {
                                         menuOpen = false
@@ -306,7 +296,7 @@ fun TripScreen(navController: NavHostController, id: Long) {
                                 DropdownMenuItem(
                                     text = { Text("Delete trip", color = MaterialTheme.colorScheme.error) },
                                     leadingIcon = {
-                                        Icon(Icons.Outlined.DeleteOutline, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                                        Icon(HangerIcons.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                                     },
                                     onClick = {
                                         menuOpen = false
@@ -428,7 +418,7 @@ fun TripScreen(navController: NavHostController, id: Long) {
     if (confirmRegenerate) {
         AlertDialog(
             onDismissRequest = { confirmRegenerate = false },
-            icon = { Icon(Icons.Outlined.Autorenew, contentDescription = null) },
+            icon = { Icon(HangerIcons.Refresh, contentDescription = null) },
             title = { Text("Regenerate plan?") },
             text = {
                 Text(
@@ -449,7 +439,7 @@ fun TripScreen(navController: NavHostController, id: Long) {
     if (confirmDelete && trip != null) {
         AlertDialog(
             onDismissRequest = { confirmDelete = false },
-            icon = { Icon(Icons.Outlined.DeleteOutline, contentDescription = null) },
+            icon = { Icon(HangerIcons.Delete, contentDescription = null) },
             title = { Text("Delete ${trip.entity.name}?") },
             text = {
                 Text("The packing list and planned outfits go with it. Outfits you've logged as worn stay in your calendar.")
@@ -476,9 +466,9 @@ private fun TripHeader(trip: Trip, weather: TripWeather?, unit: TempUnit, modifi
     Column(modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(e.name, style = MaterialTheme.typography.displaySmall, modifier = Modifier.semantics { heading() })
         if (e.destination.isNotBlank()) {
-            IconLine(Icons.Outlined.Place, e.destination)
+            IconLine(HangerIcons.Location, e.destination)
         }
-        IconLine(Icons.Outlined.CalendarMonth, "${dateRangeLabel(e.startDate, e.endDate)} · ${plural(trip.days, "day")}")
+        IconLine(HangerIcons.Calendar, "${dateRangeLabel(e.startDate, e.endDate)} · ${plural(trip.days, "day")}")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             InfoPill(tripTiming(e.startDate, e.endDate))
             e.occasions.sortedBy { it.ordinal }.forEach { InfoPill(it.label) }
@@ -563,7 +553,7 @@ private fun PackingEmpty(regenerating: Boolean, onGenerate: () -> Unit, modifier
     ) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.Luggage, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Icon(HangerIcons.Luggage, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(12.dp))
                 Text("No packing list yet", style = MaterialTheme.typography.titleSmall)
             }
@@ -578,7 +568,7 @@ private fun PackingEmpty(regenerating: Boolean, onGenerate: () -> Unit, modifier
                     Spacer(Modifier.width(10.dp))
                     Text("Building…")
                 } else {
-                    Icon(Icons.Outlined.Autorenew, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(HangerIcons.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
                     Text("Build packing list")
                 }
@@ -645,7 +635,7 @@ private fun PackingRow(
             }
         }
         IconButton(onClick = onDelete) {
-            Icon(Icons.Outlined.Close, contentDescription = "Remove ${line.label}", tint = scheme.onSurfaceVariant)
+            Icon(HangerIcons.Close, contentDescription = "Remove ${line.label}", tint = scheme.onSurfaceVariant)
         }
     }
 }
@@ -676,7 +666,7 @@ private fun AddPackingLine(onAdd: (String, PackCategory) -> Unit, modifier: Modi
             Box(Modifier.weight(1f)) {
                 OutlinedButton(onClick = { menuOpen = true }, modifier = Modifier.heightIn(min = 48.dp)) {
                     Text(category.label, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
-                    Icon(Icons.Filled.ArrowDropDown, contentDescription = "Choose category")
+                    Icon(HangerIcons.ChevronDown, contentDescription = "Choose category")
                 }
                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                     PackCategory.entries.forEach { option ->
@@ -692,7 +682,7 @@ private fun AddPackingLine(onAdd: (String, PackCategory) -> Unit, modifier: Modi
             }
             Spacer(Modifier.width(12.dp))
             FilledTonalButton(onClick = submit, enabled = text.isNotBlank(), modifier = Modifier.heightIn(min = 48.dp)) {
-                Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(HangerIcons.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
                 Text("Add")
             }

@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.bleedHorizontally
 import androidx.compose.foundation.shape.CircleShape
 import com.kintukka.hanger.ui.components.HangerFilterChip
@@ -28,16 +30,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.AutoFixHigh
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.FlipToFront
-import androidx.compose.material.icons.outlined.WarningAmber
-import androidx.compose.material.icons.outlined.ZoomIn
-import androidx.compose.material.icons.outlined.ZoomOut
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -274,11 +266,11 @@ fun OutfitBuilderScreen(navController: NavHostController, outfitId: Long, date: 
             TopAppBar(
                 title = { Text(if (entryId > 0) "Edit look" else if (outfitId > 0) "Edit outfit" else "Build an outfit") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
                     IconButton(onClick = vm::autoArrange, enabled = state.placements.isNotEmpty()) {
-                        Icon(Icons.Outlined.AutoFixHigh, contentDescription = "Tidy layout")
+                        Icon(HangerIcons.Wand, contentDescription = "Tidy layout")
                     }
                     TextButton(onClick = { saving = true }, enabled = state.placements.isNotEmpty()) { Text("Save") }
                 },
@@ -311,11 +303,11 @@ fun OutfitBuilderScreen(navController: NavHostController, outfitId: Long, date: 
                     }
                     state.selected?.let { id ->
                         Row(Modifier.padding(top = 4.dp), horizontalArrangement = Arrangement.Center) {
-                            IconButton(onClick = { vm.transform(id, 0f, 0f, 0.9f, 0f) }) { Icon(Icons.Outlined.ZoomOut, contentDescription = "Smaller") }
-                            IconButton(onClick = { vm.transform(id, 0f, 0f, 1.1f, 0f) }) { Icon(Icons.Outlined.ZoomIn, contentDescription = "Bigger") }
-                            IconButton(onClick = { vm.sendBack(id) }) { Icon(Icons.Outlined.FlipToBack, contentDescription = "Send backward") }
-                            IconButton(onClick = { vm.bringForward(id) }) { Icon(Icons.Outlined.FlipToFront, contentDescription = "Bring forward") }
-                            IconButton(onClick = { vm.remove(id) }) { Icon(Icons.Outlined.Delete, contentDescription = "Remove from outfit") }
+                            IconButton(onClick = { vm.transform(id, 0f, 0f, 0.9f, 0f) }) { Icon(HangerIcons.ZoomOut, contentDescription = "Smaller") }
+                            IconButton(onClick = { vm.transform(id, 0f, 0f, 1.1f, 0f) }) { Icon(HangerIcons.ZoomIn, contentDescription = "Bigger") }
+                            IconButton(onClick = { vm.sendBack(id) }) { Icon(HangerIcons.SendBackward, contentDescription = "Send backward") }
+                            IconButton(onClick = { vm.bringForward(id) }) { Icon(HangerIcons.BringForward, contentDescription = "Bring forward") }
+                            IconButton(onClick = { vm.remove(id) }) { Icon(HangerIcons.Delete, contentDescription = "Remove from outfit") }
                         }
                     }
                     EvaluationStrip(state.evaluation, Modifier.width(canvasWidth).padding(vertical = 8.dp))
@@ -492,7 +484,7 @@ fun EvaluationStrip(evaluation: OutfitEvaluation?, modifier: Modifier = Modifier
         (evaluation.warnings.take(2).map { it to true } + evaluation.notes.take(2).map { it to false }).take(3).forEach { (text, warning) ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    if (warning) Icons.Outlined.WarningAmber else Icons.Outlined.CheckCircle,
+                    if (warning) HangerIcons.Warning else HangerIcons.CheckCircle,
                     contentDescription = if (warning) "Warning" else null,
                     tint = if (warning) HangerTokens.extras.warning else HangerTokens.extras.success,
                     modifier = Modifier.size(16.dp),

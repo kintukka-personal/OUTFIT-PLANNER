@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.components
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -21,25 +23,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ripple
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.outlined.AcUnit
-import androidx.compose.material.icons.outlined.Cloud
-import androidx.compose.material.icons.outlined.Grain
-import androidx.compose.material.icons.outlined.LocalLaundryService
-import androidx.compose.material.icons.outlined.Thunderstorm
-import androidx.compose.material.icons.outlined.WaterDrop
-import androidx.compose.material.icons.outlined.WbCloudy
-import androidx.compose.material.icons.outlined.WbSunny
-import androidx.compose.material.icons.outlined.Dehaze
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -134,7 +123,7 @@ fun ItemTile(
             ItemImage(item, Modifier.fillMaxSize().padding(12.dp))
             if (item.status == GarmentStatus.DIRTY) {
                 StatusBubble(Modifier.align(Alignment.TopStart).padding(6.dp)) {
-                    Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = extras.laundry, modifier = Modifier.size(14.dp))
+                    Icon(HangerIcons.Laundry, contentDescription = null, tint = extras.laundry, modifier = Modifier.size(14.dp))
                 }
             } else if (item.status == GarmentStatus.AWAY) {
                 StatusBubble(Modifier.align(Alignment.TopStart).padding(6.dp)) {
@@ -143,14 +132,14 @@ fun ItemTile(
             }
             if (item.entity.favorite) {
                 StatusBubble(Modifier.align(Alignment.TopEnd).padding(6.dp)) {
-                    Icon(Icons.Filled.Favorite, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(12.dp))
+                    Icon(HangerIcons.HeartFilled, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(12.dp))
                 }
             }
             if (selected) {
                 Box(
                     Modifier.align(Alignment.BottomStart).padding(6.dp).size(22.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center,
-                ) { Icon(Icons.Filled.Check, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp)) }
+                ) { Icon(HangerIcons.Check, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp)) }
             }
             if (badge != null) {
                 Surface(
@@ -213,7 +202,7 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier, action: String? 
         if (action != null && onAction != null) {
             TextButton(onClick = onAction, contentPadding = PaddingValues(horizontal = 12.dp)) {
                 Text(action)
-                Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null, modifier = Modifier.padding(start = 4.dp).size(16.dp))
+                Icon(HangerIcons.Forward, contentDescription = null, modifier = Modifier.padding(start = 4.dp).size(16.dp))
             }
         }
     }
@@ -298,15 +287,15 @@ fun StatPill(label: String, value: String, modifier: Modifier = Modifier) {
 }
 
 fun weatherIcon(condition: WeatherCondition?): ImageVector = when (condition) {
-    WeatherCondition.CLEAR -> Icons.Outlined.WbSunny
-    WeatherCondition.PARTLY_CLOUDY -> Icons.Outlined.WbCloudy
-    WeatherCondition.CLOUDY -> Icons.Outlined.Cloud
-    WeatherCondition.FOG -> Icons.Outlined.Dehaze
-    WeatherCondition.DRIZZLE -> Icons.Outlined.Grain
-    WeatherCondition.RAIN -> Icons.Outlined.WaterDrop
-    WeatherCondition.SNOW -> Icons.Outlined.AcUnit
-    WeatherCondition.STORM -> Icons.Outlined.Thunderstorm
-    null -> Icons.Outlined.WbCloudy
+    WeatherCondition.CLEAR -> HangerIcons.Sun
+    WeatherCondition.PARTLY_CLOUDY -> HangerIcons.PartlyCloudy
+    WeatherCondition.CLOUDY -> HangerIcons.Cloud
+    WeatherCondition.FOG -> HangerIcons.Fog
+    WeatherCondition.DRIZZLE -> HangerIcons.Drizzle
+    WeatherCondition.RAIN -> HangerIcons.Rain
+    WeatherCondition.SNOW -> HangerIcons.Snow
+    WeatherCondition.STORM -> HangerIcons.Storm
+    null -> HangerIcons.PartlyCloudy
 }
 
 @Composable

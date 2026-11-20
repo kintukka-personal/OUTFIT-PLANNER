@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import androidx.activity.compose.BackHandler
@@ -26,13 +28,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.LocalLaundryService
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDialog
@@ -338,7 +333,7 @@ fun TripEditScreen(navController: NavHostController, id: Long) {
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }, enabled = !state.busy) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(HangerIcons.Back, contentDescription = "Back")
                         }
                     },
                     title = { Text(if (state.isNew) "New trip" else "Edit trip") },
@@ -425,7 +420,7 @@ fun TripEditScreen(navController: NavHostController, id: Long) {
                             enabled = !state.busy,
                             label = { Text(occasion.label) },
                             leadingIcon = if (selected) {
-                                { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize)) }
+                                { Icon(HangerIcons.Check, contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize)) }
                             } else {
                                 null
                             },
@@ -477,7 +472,7 @@ private fun DestinationField(
             placeholder = { Text("Search for a city") },
             singleLine = true,
             enabled = enabled,
-            leadingIcon = { Icon(Icons.Outlined.Place, contentDescription = null) },
+            leadingIcon = { Icon(HangerIcons.Location, contentDescription = null) },
             trailingIcon = when {
                 search.searching -> {
                     { CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) }
@@ -485,7 +480,7 @@ private fun DestinationField(
                 form.destination.isNotEmpty() -> {
                     {
                         IconButton(onClick = onClear, enabled = enabled) {
-                            Icon(Icons.Outlined.Close, contentDescription = "Clear destination")
+                            Icon(HangerIcons.Close, contentDescription = "Clear destination")
                         }
                     }
                 }
@@ -533,7 +528,7 @@ private fun PlaceRow(place: Place, onClick: () -> Unit) {
             Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.Place, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(HangerIcons.Location, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f)) {
                 Text(place.name, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -567,7 +562,7 @@ private fun DatesField(form: TripForm, enabled: Boolean, onClick: () -> Unit) {
             Modifier.heightIn(min = 64.dp).padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.DateRange, contentDescription = null, tint = scheme.onSurfaceVariant)
+            Icon(HangerIcons.Calendar, contentDescription = null, tint = scheme.onSurfaceVariant)
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1f)) {
                 Text("Dates", style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
@@ -590,7 +585,7 @@ private fun LaundryRow(checked: Boolean, enabled: Boolean, onChange: (Boolean) -
             .toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onChange),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Icon(HangerIcons.Laundry, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text("Laundry available", style = MaterialTheme.typography.bodyLarge)

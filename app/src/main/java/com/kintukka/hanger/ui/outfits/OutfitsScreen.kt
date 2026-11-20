@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.pressScale
 import androidx.compose.material3.Button
 import androidx.compose.runtime.remember
@@ -31,14 +33,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Dashboard
-import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.material.icons.outlined.Style
-import androidx.compose.material.icons.outlined.ViewModule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -150,9 +144,9 @@ fun OutfitsScreen(navController: NavHostController) {
                 Spacer(Modifier.height(4.dp))
                 PageTitle("Outfits", subtitle = plural(state.outfits.size, "saved look"))
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    QuickAction(Icons.Outlined.Dashboard, "Build", "Canvas", Modifier.weight(1f), MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) { navController.navigate(BuilderRoute()) }
-                    QuickAction(Icons.Outlined.Shuffle, "Dress me", "Shuffle", Modifier.weight(1f), MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.onSecondaryContainer) { navController.navigate(ShuffleRoute()) }
-                    QuickAction(Icons.Outlined.AutoAwesome, "Ideas", "Stylist", Modifier.weight(1f), MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer) { navController.navigate(SuggestRoute()) }
+                    QuickAction(HangerIcons.Canvas, "Build", "Canvas", Modifier.weight(1f), MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) { navController.navigate(BuilderRoute()) }
+                    QuickAction(HangerIcons.Shuffle, "Dress me", "Shuffle", Modifier.weight(1f), MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.onSecondaryContainer) { navController.navigate(ShuffleRoute()) }
+                    QuickAction(HangerIcons.Sparkle, "Ideas", "Stylist", Modifier.weight(1f), MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer) { navController.navigate(SuggestRoute()) }
                 }
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     listOf("Saved outfits", "Capsules").forEachIndexed { i, label ->
@@ -175,7 +169,7 @@ fun OutfitsScreen(navController: NavHostController) {
             if (state.loaded && state.outfits.isEmpty()) {
                 item(span = { GridItemSpan(maxLineSpan) }, key = "empty") {
                     EmptyState(
-                        Icons.Outlined.Style,
+                        HangerIcons.Outfit,
                         "No saved outfits yet",
                         "Build one on the canvas, shuffle a few combinations, or save a suggestion you like.",
                     )
@@ -187,7 +181,7 @@ fun OutfitsScreen(navController: NavHostController) {
                         OutfitCollage(outfit.placements, state.items, Modifier.fillMaxWidth())
                         if (outfit.entity.favorite) {
                             Icon(
-                                Icons.Filled.Favorite, contentDescription = "Favourite", tint = MaterialTheme.colorScheme.primary,
+                                HangerIcons.HeartFilled, contentDescription = "Favourite", tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).size(16.dp),
                             )
                         }
@@ -210,7 +204,7 @@ fun OutfitsScreen(navController: NavHostController) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Button(onClick = { newCapsule = true }, modifier = Modifier.padding(top = 4.dp).height(48.dp)) {
-                        Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(HangerIcons.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                         Text("New capsule", modifier = Modifier.padding(start = 8.dp))
                     }
                 }
@@ -278,7 +272,7 @@ private fun CapsuleCard(summary: CapsuleSummary, items: Map<Long, Item>, onClick
     ) {
         Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.ViewModule, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Icon(HangerIcons.Grid, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Text(summary.capsule.entity.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f).padding(start = 10.dp))
             }
             Text(

@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import androidx.compose.foundation.background
@@ -23,12 +25,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.LockOpen
-import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -247,12 +243,12 @@ fun ShuffleScreen(navController: NavHostController, date: LocalDate?) {
             TopAppBar(
                 title = { Text("Dress me") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
                     IconButton(onClick = {
                         navController.navigate(BuilderRoute(dateEpoch = date.toEpochOrNone(), itemIds = vm.currentIds().joinToString(",")))
-                    }) { Icon(Icons.Outlined.Edit, contentDescription = "Open on canvas") }
+                    }) { Icon(HangerIcons.Edit, contentDescription = "Open on canvas") }
                 },
             )
         },
@@ -268,7 +264,7 @@ fun ShuffleScreen(navController: NavHostController, date: LocalDate?) {
                             modifier = Modifier.weight(1f).height(52.dp),
                         ) { Text(if (future) "Plan ${day.shortLabel()}" else "Wear it") }
                         Button(onClick = { vm.shuffle() }, modifier = Modifier.weight(1.2f).height(52.dp)) {
-                            Icon(Icons.Outlined.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(HangerIcons.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
                             Text("Shuffle")
                         }
@@ -328,7 +324,7 @@ private fun ShuffleRow(
             Text(category.label, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
             IconToggleButton(checked = locked, onCheckedChange = { onToggleLock() }) {
                 Icon(
-                    if (locked) Icons.Filled.Lock else Icons.Outlined.LockOpen,
+                    if (locked) HangerIcons.Lock else HangerIcons.LockOpen,
                     contentDescription = if (locked) "Unlock ${category.label}" else "Keep this ${category.label.lowercase()}",
                     tint = if (locked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )

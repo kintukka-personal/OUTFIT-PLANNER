@@ -1,12 +1,12 @@
 package com.kintukka.hanger.ui.guide
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +43,7 @@ fun TipOfTheDayCard(date: LocalDate, onOpenGuide: () -> Unit, modifier: Modifier
     ) {
         Column(Modifier.padding(start = 16.dp, end = 8.dp, top = 14.dp, bottom = 4.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.Lightbulb, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Icon(HangerIcons.Bulb, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Text("Style tip", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(start = 8.dp))
             }
             Text(

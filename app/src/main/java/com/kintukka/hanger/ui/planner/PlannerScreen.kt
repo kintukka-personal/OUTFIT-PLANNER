@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerSegmentedButton
 
 import androidx.compose.animation.AnimatedContent
@@ -31,14 +33,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.LocalFireDepartment
-import androidx.compose.material.icons.outlined.Luggage
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -219,7 +213,7 @@ fun PlannerScreen(navController: NavHostController) {
             if (tab == TAB_TRIPS && !state.loading) {
                 ExtendedFloatingActionButton(
                     onClick = newTrip,
-                    icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                    icon = { Icon(HangerIcons.Add, contentDescription = null) },
                     text = { Text("New trip") },
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -259,7 +253,7 @@ fun PlannerScreen(navController: NavHostController) {
 
 @Composable
 private fun PlannerTabs(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier) {
-    val options = listOf("Calendar" to Icons.Outlined.CalendarMonth, "Trips" to Icons.Outlined.Luggage)
+    val options = listOf("Calendar" to HangerIcons.Calendar, "Trips" to HangerIcons.Luggage)
     SingleChoiceSegmentedButtonRow(modifier.fillMaxWidth()) {
         options.forEachIndexed { index, (label, icon) ->
             HangerSegmentedButton(
@@ -350,10 +344,10 @@ private fun MonthHeader(
             TextButton(onClick = onToday) { Text("Today") }
         }
         IconButton(onClick = onPrevious) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Previous month")
+            Icon(HangerIcons.ChevronLeft, contentDescription = "Previous month")
         }
         IconButton(onClick = onNext) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Next month")
+            Icon(HangerIcons.ChevronRight, contentDescription = "Next month")
         }
     }
 }
@@ -478,7 +472,7 @@ private fun StreakCard(streak: Int, loggedToday: Boolean, onClick: () -> Unit, m
                 Modifier.size(44.dp).clip(CircleShape).background(scheme.surfaceContainerLowest.copy(alpha = 0.6f)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(Icons.Outlined.LocalFireDepartment, contentDescription = null, tint = scheme.secondary)
+                Icon(HangerIcons.Flame, contentDescription = null, tint = scheme.secondary)
             }
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f)) {
@@ -572,7 +566,7 @@ private fun LazyListScope.tripsSection(
     if (!state.hasTrips) {
         item(key = "trips-empty") {
             EmptyState(
-                icon = Icons.Outlined.Luggage,
+                icon = HangerIcons.Luggage,
                 title = "No trips yet",
                 body = "Tap New trip and Hanger builds a packing list and an outfit for each day " +
                     "from your closet and the forecast.",
@@ -614,7 +608,7 @@ private fun TripCard(trip: Trip, today: LocalDate, past: Boolean, onClick: () ->
                     if (e.destination.isNotBlank()) {
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 2.dp)) {
                             Icon(
-                                Icons.Outlined.Place,
+                                HangerIcons.Location,
                                 contentDescription = null,
                                 tint = scheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp),

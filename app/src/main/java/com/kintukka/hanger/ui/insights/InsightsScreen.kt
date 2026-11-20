@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.insights
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,12 +26,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Insights
-import androidx.compose.material.icons.outlined.LocalFireDepartment
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -121,7 +117,7 @@ internal fun InsightsContent(
                 modifier = Modifier.padding(horizontal = PagePadding),
                 trailing = {
                     IconButton(onClick = onOpenSettings) {
-                        Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+                        Icon(HangerIcons.Settings, contentDescription = "Settings")
                     }
                 },
             )
@@ -135,7 +131,7 @@ internal fun InsightsContent(
             }
             state.isEmpty -> item(key = "empty") {
                 EmptyState(
-                    icon = Icons.Outlined.Insights,
+                    icon = HangerIcons.Insights,
                     title = "Nothing to count yet",
                     body = "Add a few pieces to your closet and log what you wear. Your stats, streaks and forgotten favourites will show up here.",
                     action = {
@@ -257,7 +253,7 @@ private fun StreakCard(streaks: Streaks, modifier: Modifier = Modifier) {
     ) {
         Column(Modifier.padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.LocalFireDepartment, contentDescription = null, modifier = Modifier.size(20.dp))
+                Icon(HangerIcons.Flame, contentDescription = null, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
                 Text("Logging streak", style = MaterialTheme.typography.titleSmall)
             }
@@ -403,7 +399,7 @@ private fun ForgottenTile(ranked: RankedItem, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                Icons.Outlined.AutoAwesome,
+                HangerIcons.Sparkle,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(14.dp),
@@ -496,7 +492,7 @@ private fun WishlistImpactRow(row: WishlistRow, onClick: () -> Unit, modifier: M
                 }
             } else {
                 Icon(
-                    Icons.AutoMirrored.Outlined.ArrowForward,
+                    HangerIcons.Forward,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

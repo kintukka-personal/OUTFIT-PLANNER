@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.CircleShape
@@ -31,16 +33,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AddAPhoto
-import androidx.compose.material.icons.outlined.Brush
-import androidx.compose.material.icons.outlined.Checkroom
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.LocalLaundryService
-import androidx.compose.material.icons.outlined.PhotoLibrary
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -219,11 +211,11 @@ fun ClosetScreen(navController: NavHostController) {
                         trailing = {
                             Row {
                                 IconButton(onClick = { searching = !searching; if (!searching) vm.update { it.copy(query = "") } }) {
-                                    Icon(if (searching) Icons.Outlined.Close else Icons.Outlined.Search, contentDescription = if (searching) "Close search" else "Search closet")
+                                    Icon(if (searching) HangerIcons.Close else HangerIcons.Search, contentDescription = if (searching) "Close search" else "Search closet")
                                 }
                                 Box {
                                     IconButton(onClick = { sortOpen = true }) {
-                                        Icon(Icons.AutoMirrored.Outlined.Sort, contentDescription = "Sort")
+                                        Icon(HangerIcons.Sort, contentDescription = "Sort")
                                     }
                                     DropdownMenu(expanded = sortOpen, onDismissRequest = { sortOpen = false }) {
                                         ClosetSort.entries.forEach { sort ->
@@ -243,7 +235,7 @@ fun ClosetScreen(navController: NavHostController) {
                             onValueChange = { q -> vm.update { it.copy(query = q) } },
                             placeholder = { Text("Search by name, colour, brand, tag…") },
                             singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+                            leadingIcon = { Icon(HangerIcons.Search, contentDescription = null) },
                             modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
                         )
                     }
@@ -293,7 +285,7 @@ fun ClosetScreen(navController: NavHostController) {
                                 Box(
                                     Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
                                     contentAlignment = Alignment.Center,
-                                ) { Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp)) }
+                                ) { Icon(HangerIcons.Laundry, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp)) }
                                 Text(
                                     "${plural(state.dirtyCount, "piece")} in the laundry",
                                     style = MaterialTheme.typography.bodyMedium,
@@ -315,7 +307,7 @@ fun ClosetScreen(navController: NavHostController) {
                         else -> "Snap or pick photos of your clothes. Backgrounds are removed and colours tagged automatically, right on your phone."
                     }
                     EmptyState(
-                        icon = Icons.Outlined.Checkroom,
+                        icon = HangerIcons.Hanger,
                         title = if (state.filters.view == ClosetView.WARDROBE && state.filters.query.isBlank()) "Start your closet" else "Nothing here yet",
                         body = message,
                     )
@@ -329,7 +321,7 @@ fun ClosetScreen(navController: NavHostController) {
 
         ExtendedFloatingActionButton(
             onClick = { showAdd = true },
-            icon = { Icon(Icons.Outlined.Add, contentDescription = null) },
+            icon = { Icon(HangerIcons.Add, contentDescription = null) },
             text = { Text("Add") },
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -341,17 +333,17 @@ fun ClosetScreen(navController: NavHostController) {
         ModalBottomSheet(onDismissRequest = { showAdd = false }) {
             Column(Modifier.padding(bottom = 24.dp)) {
                 Text("Add to your closet", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                AddOption(Icons.Outlined.AddAPhoto, "Take a photo", "Lay it flat or hang it up — plain backgrounds cut out best") {
+                AddOption(HangerIcons.Camera, "Take a photo", "Lay it flat or hang it up — plain backgrounds cut out best") {
                     showAdd = false
                     val uri = vm.newCaptureUri()
                     pendingCamera = uri.toString()
                     camera.launch(uri)
                 }
-                AddOption(Icons.Outlined.PhotoLibrary, "Choose photos", "Add up to 30 at once, including outfit photos") {
+                AddOption(HangerIcons.Photos, "Choose photos", "Add up to 30 at once, including outfit photos") {
                     showAdd = false
                     picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
-                AddOption(Icons.Outlined.Brush, "Add without a photo", "Describe it and get an illustration — great for wishlists") {
+                AddOption(HangerIcons.Brush, "Add without a photo", "Describe it and get an illustration — great for wishlists") {
                     showAdd = false
                     navController.navigate(EditItemRoute(0))
                 }

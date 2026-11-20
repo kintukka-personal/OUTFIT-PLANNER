@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.today
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.pressScale
 import com.kintukka.hanger.ui.components.HangerCard
 import androidx.compose.ui.unit.sp
@@ -16,7 +18,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.layout.widthIn
@@ -41,18 +42,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Checkroom
-import androidx.compose.material.icons.outlined.Dashboard
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.LocalLaundryService
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Shuffle
-import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -232,10 +221,10 @@ fun TodayScreen(navController: NavHostController) {
                             modifier = Modifier.weight(1f),
                         )
                         IconButton(onClick = { navController.navigate(com.kintukka.hanger.ui.navigation.StyleGuideRoute) }) {
-                            Icon(Icons.Outlined.Palette, contentDescription = "Style guide")
+                            Icon(HangerIcons.Palette, contentDescription = "Style guide")
                         }
                         IconButton(onClick = { navController.navigate(SettingsRoute) }) {
-                            Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+                            Icon(HangerIcons.Settings, contentDescription = "Settings")
                         }
                     }
                     Text(if (showTomorrow) "Tomorrow" else "Today", style = MaterialTheme.typography.displayLarge, modifier = Modifier.semantics { heading() })
@@ -298,7 +287,7 @@ fun TodayScreen(navController: NavHostController) {
                                 Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp))
+                                Icon(HangerIcons.Laundry, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp))
                             }
                             Text(
                                 "${plural(state.dirty, "piece")} in the laundry — they're left out of ideas",
@@ -320,7 +309,7 @@ fun TodayScreen(navController: NavHostController) {
                                 style = MaterialTheme.typography.headlineLarge,
                                 modifier = Modifier.weight(1f),
                             )
-                            FilledTonalIconButton(onClick = suggestVm::more) { Icon(Icons.Outlined.Refresh, contentDescription = "New ideas") }
+                            FilledTonalIconButton(onClick = suggestVm::more) { Icon(HangerIcons.Refresh, contentDescription = "New ideas") }
                         }
                         SuggestHeader(ideas.copy(weather = null), onOccasion = suggestVm::setOccasion, onClearAnchor = null, showDate = false)
                     }
@@ -363,9 +352,9 @@ fun TodayScreen(navController: NavHostController) {
                 }
                 item(key = "quick") {
                     Row(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        QuickTile(Icons.Outlined.Shuffle, "Dress me", Modifier.weight(1f)) { navController.navigate(ShuffleRoute(date.toEpochDay())) }
-                        QuickTile(Icons.Outlined.Dashboard, "Build", Modifier.weight(1f)) { navController.navigate(BuilderRoute(dateEpoch = date.toEpochDay())) }
-                        QuickTile(Icons.Outlined.CalendarMonth, "Plan week", Modifier.weight(1f)) {
+                        QuickTile(HangerIcons.Shuffle, "Dress me", Modifier.weight(1f)) { navController.navigate(ShuffleRoute(date.toEpochDay())) }
+                        QuickTile(HangerIcons.Canvas, "Build", Modifier.weight(1f)) { navController.navigate(BuilderRoute(dateEpoch = date.toEpochDay())) }
+                        QuickTile(HangerIcons.Calendar, "Plan week", Modifier.weight(1f)) {
                             navController.navigate(PlannerRoute) { launchSingleTop = true }
                         }
                     }
@@ -423,7 +412,7 @@ private fun WeatherCard(state: TodayUi, onRefresh: () -> Unit, onSetLocation: ()
         Box(Modifier.background(gradient)) {
             if (!s.hasLocation) {
                 Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-                    WeatherBadge(Icons.Outlined.LocationOn)
+                    WeatherBadge(HangerIcons.Location)
                     Column(Modifier.weight(1f).padding(horizontal = 14.dp)) {
                         Text("Dress for the weather", style = MaterialTheme.typography.titleMedium)
                         Text("Set your location and ideas adapt to the forecast.", style = MaterialTheme.typography.bodyMedium)
@@ -435,7 +424,7 @@ private fun WeatherCard(state: TodayUi, onRefresh: () -> Unit, onSetLocation: ()
             val w = state.weather
             Column(Modifier.padding(start = 20.dp, end = 8.dp, top = 16.dp, bottom = 20.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Outlined.LocationOn, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(HangerIcons.Location, contentDescription = null, modifier = Modifier.size(16.dp))
                     Text(
                         s.locationName.orEmpty().ifBlank { "Your location" },
                         style = MaterialTheme.typography.labelLarge,
@@ -443,7 +432,7 @@ private fun WeatherCard(state: TodayUi, onRefresh: () -> Unit, onSetLocation: ()
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    IconButton(onClick = onRefresh) { Icon(Icons.Outlined.Refresh, contentDescription = "Refresh forecast", modifier = Modifier.size(20.dp)) }
+                    IconButton(onClick = onRefresh) { Icon(HangerIcons.Refresh, contentDescription = "Refresh forecast", modifier = Modifier.size(20.dp)) }
                 }
                 if (w == null) {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 12.dp)) {
@@ -500,7 +489,7 @@ private fun WelcomeCard(loading: Boolean, onAdd: () -> Unit, onDemo: () -> Unit,
             Box(
                 Modifier.size(52.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
                 contentAlignment = Alignment.Center,
-            ) { Icon(Icons.Outlined.Checkroom, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp)) }
+            ) { Icon(HangerIcons.Hanger, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp)) }
             Text("Your closet, in your pocket", style = MaterialTheme.typography.headlineLarge)
             Text(
                 "Photograph your clothes and Hanger cuts them out, tags their colours and starts suggesting outfits for the weather and your plans. Everything stays on this phone.",
@@ -508,7 +497,7 @@ private fun WelcomeCard(loading: Boolean, onAdd: () -> Unit, onDemo: () -> Unit,
             )
             Spacer(Modifier.height(4.dp))
             Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-                Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(HangerIcons.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
                 Text("Add my first pieces")
             }
@@ -558,7 +547,7 @@ private fun PlannedCard(entry: DayEntry, state: TodayUi, tomorrow: Boolean, onWe
                 )
                 if (!entry.worn && !tomorrow) {
                     Button(onClick = onWear, modifier = Modifier.padding(top = 4.dp).height(44.dp), contentPadding = PaddingValues(horizontal = 16.dp)) {
-                        Icon(Icons.Outlined.TaskAlt, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(HangerIcons.CheckCircle, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text("I'm wearing it")
                     }
@@ -616,7 +605,7 @@ private fun ForgottenCard(item: Item, modifier: Modifier = Modifier, onStyle: ()
                 Box(
                     Modifier.size(40.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center,
-                ) { Icon(Icons.Outlined.AutoAwesome, contentDescription = "Style it", tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(20.dp)) }
+                ) { Icon(HangerIcons.Sparkle, contentDescription = "Style it", tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(20.dp)) }
             }
         }
     }

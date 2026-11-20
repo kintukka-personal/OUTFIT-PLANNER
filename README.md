@@ -28,6 +28,9 @@ a connection (apart from the weather forecast).
 <p align="center">
   <img src="docs/screenshots/tablet_closet.png" width="820" alt="Tablet layout with navigation rail">
 </p>
+<p align="center">
+  <img src="docs/screenshots/icon_launcher.png" width="480" alt="App icon, themed icon and notification icon">
+</p>
 
 ## Install it on your phone
 
@@ -104,7 +107,7 @@ CI publish signed builds add two repository secrets: `HANGER_KEYSTORE_BASE64` (t
 
 | Layer | Tech |
 |---|---|
-| UI | Kotlin, Jetpack Compose, Material 3, Navigation Compose (type-safe routes), Instrument Serif + Inter; adaptive shell (bottom bar on phones, navigation rail and centred content on tablets, foldables and landscape) and a small design system in `ui/components/DesignSystem.kt` |
+| UI | Kotlin, Jetpack Compose, Material 3, Navigation Compose (type-safe routes), Instrument Serif + Inter; adaptive shell (bottom bar on phones, navigation rail and centred content on tablets, foldables and landscape), a small design system in `ui/components/DesignSystem.kt` and a custom line icon set in `ui/icons/HangerIcons.kt` ([gallery](docs/screenshots/icons_light.png)) |
 | Data | Room (items, outfits + canvas placements, calendar entries, trips, packing, capsules), DataStore |
 | Styling engine | Pure-Kotlin `:engine` module: colour naming/harmony, weather advisor, outfit evaluator & generator, shuffle, feedback learning, packing planner, stats, capsule maths — 105 unit tests |
 | Images | ML Kit Subject Segmentation (Play services) + Image Labeling, Coil |

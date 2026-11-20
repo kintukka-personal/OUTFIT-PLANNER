@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.guide
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import androidx.compose.animation.AnimatedVisibility
@@ -25,13 +27,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
-import androidx.compose.material.icons.outlined.Lightbulb
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -111,7 +106,7 @@ fun StyleGuideScreen(navController: NavHostController) {
                 TopAppBar(
                     title = { Text("Style guide") },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                        IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                     },
                 )
                 PrimaryScrollableTabRow(selectedTabIndex = tab, edgePadding = 8.dp, containerColor = MaterialTheme.colorScheme.background, divider = { HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant) }) {
@@ -151,7 +146,7 @@ private fun LazyListScope.forYou(state: GuideState, open: (List<Long>) -> Unit, 
         item(key = "tip") {
             GuideCard(Modifier.padding(horizontal = Page)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Outlined.Lightbulb, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    Icon(HangerIcons.Bulb, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     Text(
                         "Tip of the day · ${tip.topic.replaceFirstChar(Char::uppercase)}",
                         style = MaterialTheme.typography.labelLarge,
@@ -573,7 +568,7 @@ private fun LazyListScope.guide(state: GuideState) {
                     val owned = e.name in state.essentialsOwned
                     Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.Top) {
                         Icon(
-                            if (owned) Icons.Outlined.CheckCircle else Icons.Outlined.RadioButtonUnchecked,
+                            if (owned) HangerIcons.CheckCircle else HangerIcons.Circle,
                             contentDescription = if (owned) "In your closet" else "Not in your closet",
                             tint = if (owned) HangerTokens.extras.success else MaterialTheme.colorScheme.outline,
                             modifier = Modifier.size(20.dp),
@@ -627,7 +622,7 @@ private fun Expandable(title: String, subtitle: String, modifier: Modifier = Mod
                 Text(title, style = MaterialTheme.typography.titleMedium)
                 Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = if (open) "Collapse" else "Expand")
+            Icon(if (open) HangerIcons.ChevronUp else HangerIcons.ChevronDown, contentDescription = if (open) "Collapse" else "Expand")
         }
         AnimatedVisibility(open) { Column(Modifier.padding(top = 8.dp)) { content() } }
     }

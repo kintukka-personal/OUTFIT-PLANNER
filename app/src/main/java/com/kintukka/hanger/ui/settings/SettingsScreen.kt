@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.settings
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 import com.kintukka.hanger.ui.components.HangerSegmentedButton
 
@@ -38,29 +40,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Checkroom
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Cloud
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.Keyboard
-import androidx.compose.material.icons.outlined.LocalLaundryService
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.MyLocation
-import androidx.compose.material.icons.outlined.NotificationsActive
-import androidx.compose.material.icons.outlined.NotificationsOff
-import androidx.compose.material.icons.outlined.Payments
-import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material.icons.outlined.SaveAlt
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.SettingsBackupRestore
-import androidx.compose.material.icons.outlined.Style
-import androidx.compose.material.icons.outlined.Thermostat
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -240,7 +219,7 @@ fun SettingsScreen(navController: NavHostController) {
                 title = { Text("Settings") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(HangerIcons.Back, contentDescription = "Back")
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -341,7 +320,7 @@ internal fun LazyListScope.settingsContent(
     section("units", "Units") {
         SettingsCard {
             ListItem(
-                leadingContent = { Icon(Icons.Outlined.Thermostat, contentDescription = null) },
+                leadingContent = { Icon(HangerIcons.Thermometer, contentDescription = null) },
                 headlineContent = { Text("Temperature") },
                 supportingContent = { Text("Used in forecasts") },
                 trailingContent = { TempUnitToggle(s.tempUnit, actions.onTempUnit) },
@@ -353,7 +332,7 @@ internal fun LazyListScope.settingsContent(
     section("reminder", "Daily outfit reminder") {
         SettingsCard {
             SwitchRow(
-                icon = Icons.Outlined.NotificationsActive,
+                icon = HangerIcons.Bell,
                 title = "Remind me each morning",
                 supporting = "A nudge with today's planned or suggested outfit",
                 checked = s.reminderEnabled,
@@ -361,7 +340,7 @@ internal fun LazyListScope.settingsContent(
             )
             RowDivider()
             ListItem(
-                leadingContent = { Icon(Icons.Outlined.Schedule, contentDescription = null) },
+                leadingContent = { Icon(HangerIcons.Clock, contentDescription = null) },
                 headlineContent = { Text("Time") },
                 trailingContent = {
                     Text(
@@ -377,7 +356,7 @@ internal fun LazyListScope.settingsContent(
                 RowDivider()
                 ListItem(
                     leadingContent = {
-                        Icon(Icons.Outlined.NotificationsOff, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                        Icon(HangerIcons.BellOff, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                     },
                     headlineContent = { Text("Notifications are off for Hanger") },
                     supportingContent = { Text("The reminder can't appear until you allow them.") },
@@ -391,7 +370,7 @@ internal fun LazyListScope.settingsContent(
     section("laundry", "Laundry") {
         SettingsCard {
             SwitchRow(
-                icon = Icons.Outlined.LocalLaundryService,
+                icon = HangerIcons.Laundry,
                 title = "Move clothes to the laundry automatically",
                 supporting = "After an item reaches its wears-before-wash count it's marked as in the laundry and skipped in suggestions.",
                 checked = s.autoLaundry,
@@ -412,7 +391,7 @@ internal fun LazyListScope.settingsContent(
         val running = state.busy == BusyTask.EXPORT || state.busy == BusyTask.RESTORE
         SettingsCard {
             ActionRow(
-                icon = Icons.Outlined.SaveAlt,
+                icon = HangerIcons.Export,
                 title = "Export backup",
                 supporting = "Your closet, outfits, plans and photos in one .zip. Save it to Drive, Downloads or anywhere you like.",
                 enabled = state.busy == null,
@@ -420,7 +399,7 @@ internal fun LazyListScope.settingsContent(
             )
             RowDivider()
             ActionRow(
-                icon = Icons.Outlined.SettingsBackupRestore,
+                icon = HangerIcons.Restore,
                 title = "Restore from backup",
                 supporting = "Replace what's on this phone with a Hanger backup file.",
                 enabled = state.busy == null,
@@ -435,7 +414,7 @@ internal fun LazyListScope.settingsContent(
         SettingsCard {
             if (state.demoItemCount > 0) {
                 ActionRow(
-                    icon = Icons.Outlined.DeleteOutline,
+                    icon = HangerIcons.Delete,
                     title = "Remove demo closet",
                     supporting = "Delete the ${plural(state.demoItemCount, "sample piece")} and their outfits. Your own items stay.",
                     enabled = state.busy == null,
@@ -443,7 +422,7 @@ internal fun LazyListScope.settingsContent(
                 )
             } else {
                 ActionRow(
-                    icon = Icons.Outlined.Checkroom,
+                    icon = HangerIcons.Hanger,
                     title = "Load demo closet",
                     supporting = "Try Hanger with a ready-made wardrobe, outfits and wear history. Remove it any time.",
                     enabled = state.busy == null,
@@ -457,21 +436,21 @@ internal fun LazyListScope.settingsContent(
     section("about", "About") {
         SettingsCard {
             ListItem(
-                leadingContent = { Icon(Icons.Outlined.Checkroom, contentDescription = null) },
+                leadingContent = { Icon(HangerIcons.Hanger, contentDescription = null) },
                 headlineContent = { Text(stringResource(R.string.app_name)) },
                 supportingContent = { Text("Version ${BuildConfig.VERSION_NAME}") },
                 colors = rowColors(),
             )
             RowDivider()
             ListItem(
-                leadingContent = { Icon(Icons.Outlined.Lock, contentDescription = null) },
+                leadingContent = { Icon(HangerIcons.Lock, contentDescription = null) },
                 headlineContent = { Text("Private by design") },
                 supportingContent = { Text(PRIVACY_NOTE) },
                 colors = rowColors(),
             )
             RowDivider()
             ListItem(
-                leadingContent = { Icon(Icons.Outlined.Cloud, contentDescription = null) },
+                leadingContent = { Icon(HangerIcons.Cloud, contentDescription = null) },
                 headlineContent = { Text("Weather data") },
                 supportingContent = { Text("Forecasts by Open-Meteo.com, licensed under CC BY 4.0.") },
                 colors = rowColors(),
@@ -505,7 +484,7 @@ private fun LocationCard(state: SettingsUiState, query: String, actions: Setting
     val focusManager = LocalFocusManager.current
     SettingsCard {
         ListItem(
-            leadingContent = { Icon(Icons.Outlined.LocationOn, contentDescription = null) },
+            leadingContent = { Icon(HangerIcons.Location, contentDescription = null) },
             headlineContent = { Text(s.locationName ?: "Not set") },
             supportingContent = {
                 Text(
@@ -530,7 +509,7 @@ private fun LocationCard(state: SettingsUiState, query: String, actions: Setting
                 if (state.locating) {
                     CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                 } else {
-                    Icon(Icons.Outlined.MyLocation, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(HangerIcons.MyLocation, contentDescription = null, modifier = Modifier.size(18.dp))
                 }
                 Spacer(Modifier.width(8.dp))
                 Text(if (state.locating) "Finding you…" else "Use my location")
@@ -540,7 +519,7 @@ private fun LocationCard(state: SettingsUiState, query: String, actions: Setting
                 onValueChange = actions.onQueryChange,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Or search for a town or city") },
-                leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+                leadingIcon = { Icon(HangerIcons.Search, contentDescription = null) },
                 trailingIcon = when {
                     search.searching -> {
                         { CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) }
@@ -548,7 +527,7 @@ private fun LocationCard(state: SettingsUiState, query: String, actions: Setting
                     query.isNotEmpty() -> {
                         {
                             IconButton(onClick = { actions.onQueryChange("") }) {
-                                Icon(Icons.Outlined.Close, contentDescription = "Clear search")
+                                Icon(HangerIcons.Close, contentDescription = "Clear search")
                             }
                         }
                     }
@@ -566,7 +545,7 @@ private fun LocationCard(state: SettingsUiState, query: String, actions: Setting
                 search.results.forEach { place ->
                     val detail = listOf(place.region, place.country).filter { it.isNotBlank() && it != place.name }.joinToString(", ")
                     ListItem(
-                        leadingContent = { Icon(Icons.Outlined.Place, contentDescription = null) },
+                        leadingContent = { Icon(HangerIcons.Location, contentDescription = null) },
                         headlineContent = { Text(place.name) },
                         supportingContent = if (detail.isNotEmpty()) {
                             { Text(detail) }
@@ -614,14 +593,14 @@ private fun TempUnitToggle(selected: TempUnit, onSelect: (TempUnit) -> Unit) {
 private fun OccasionRow(selected: Occasion, onSelect: (Occasion) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     ListItem(
-        leadingContent = { Icon(Icons.Outlined.Style, contentDescription = null) },
+        leadingContent = { Icon(HangerIcons.Outfit, contentDescription = null) },
         headlineContent = { Text("Default occasion") },
         supportingContent = { Text("What suggestions dress you for") },
         trailingContent = {
             Box {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(selected.label, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
-                    Icon(Icons.Filled.ArrowDropDown, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    Icon(HangerIcons.ChevronDown, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     Occasion.entries.forEach { occasion ->
@@ -632,7 +611,7 @@ private fun OccasionRow(selected: Occasion, onSelect: (Occasion) -> Unit) {
                                 onSelect(occasion)
                             },
                             trailingIcon = if (occasion == selected) {
-                                { Icon(Icons.Filled.Check, contentDescription = "Selected") }
+                                { Icon(HangerIcons.Check, contentDescription = "Selected") }
                             } else null,
                         )
                     }
@@ -649,7 +628,7 @@ private fun OccasionRow(selected: Occasion, onSelect: (Occasion) -> Unit) {
 private fun CurrencyRow(selected: String, onSelect: (String) -> Unit) {
     Column {
         ListItem(
-            leadingContent = { Icon(Icons.Outlined.Payments, contentDescription = null) },
+            leadingContent = { Icon(HangerIcons.Price, contentDescription = null) },
             headlineContent = { Text("Currency") },
             supportingContent = { Text("For prices, closet value and cost per wear") },
             colors = rowColors(),
@@ -703,7 +682,7 @@ private fun ReminderTimeDialog(initialMinutes: Int, is24Hour: Boolean, onDismiss
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { typing = !typing }) {
                         Icon(
-                            if (typing) Icons.Outlined.Schedule else Icons.Outlined.Keyboard,
+                            if (typing) HangerIcons.Clock else HangerIcons.Keyboard,
                             contentDescription = if (typing) "Switch to clock" else "Switch to typing the time",
                         )
                     }

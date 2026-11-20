@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -134,20 +128,20 @@ fun OutfitDetailScreen(navController: NavHostController, id: Long) {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
                     if (outfit != null) {
                         IconButton(onClick = vm::toggleFavourite) {
                             Icon(
-                                if (outfit.entity.favorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                if (outfit.entity.favorite) HangerIcons.HeartFilled else HangerIcons.Heart,
                                 contentDescription = if (outfit.entity.favorite) "Remove from favourites" else "Add to favourites",
                                 tint = if (outfit.entity.favorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                             )
                         }
-                        IconButton(onClick = { navController.navigate(BuilderRoute(outfitId = id)) }) { Icon(Icons.Outlined.Edit, contentDescription = "Edit outfit") }
+                        IconButton(onClick = { navController.navigate(BuilderRoute(outfitId = id)) }) { Icon(HangerIcons.Edit, contentDescription = "Edit outfit") }
                         Box {
-                            IconButton(onClick = { menu = true }) { Icon(Icons.Outlined.MoreVert, contentDescription = "More options") }
+                            IconButton(onClick = { menu = true }) { Icon(HangerIcons.More, contentDescription = "More options") }
                             DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                                 DropdownMenuItem(text = { Text("Delete outfit", color = MaterialTheme.colorScheme.error) }, onClick = { menu = false; confirmDelete = true })
                             }
@@ -192,7 +186,7 @@ fun OutfitDetailScreen(navController: NavHostController, id: Long) {
                         (e.notes.map { it to false } + e.warnings.map { it to true }).forEach { (text, warning) ->
                             Row(Modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.Top) {
                                 Icon(
-                                    if (warning) Icons.Outlined.WarningAmber else Icons.Outlined.CheckCircle,
+                                    if (warning) HangerIcons.Warning else HangerIcons.CheckCircle,
                                     contentDescription = if (warning) "Warning" else null,
                                     tint = if (warning) HangerTokens.extras.warning else HangerTokens.extras.success,
                                     modifier = Modifier.size(18.dp),

@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,9 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -210,7 +209,7 @@ internal fun WornBadge(worn: Boolean, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
-                if (worn) Icons.Filled.Check else Icons.Outlined.Schedule,
+                if (worn) HangerIcons.Check else HangerIcons.Clock,
                 contentDescription = null,
                 modifier = Modifier.size(14.dp),
             )

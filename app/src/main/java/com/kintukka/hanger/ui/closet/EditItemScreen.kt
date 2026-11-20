@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import android.net.Uri
@@ -22,12 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ContentCut
-import androidx.compose.material.icons.outlined.PhotoLibrary
-import androidx.compose.material.icons.outlined.Remove
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -202,7 +198,7 @@ fun EditItemScreen(navController: NavHostController, id: Long) {
             TopAppBar(
                 title = { Text(if (id > 0) "Edit item" else "New item") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
                     TextButton(onClick = vm::save, enabled = state.loaded && !state.busy) { Text("Save") }
@@ -243,10 +239,10 @@ fun EditItemScreen(navController: NavHostController, id: Long) {
                 }
                 Spacer(Modifier.weight(1f))
                 if (e?.originalImageFile != null) {
-                    IconButton(onClick = vm::redoCutout, enabled = !state.busy) { Icon(Icons.Outlined.ContentCut, contentDescription = "Redo cut-out") }
+                    IconButton(onClick = vm::redoCutout, enabled = !state.busy) { Icon(HangerIcons.Scissors, contentDescription = "Redo cut-out") }
                 }
                 IconButton(onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }, enabled = !state.busy) {
-                    Icon(Icons.Outlined.PhotoLibrary, contentDescription = if (state.illustrated) "Add a photo" else "Replace photo")
+                    Icon(HangerIcons.Photos, contentDescription = if (state.illustrated) "Add a photo" else "Replace photo")
                 }
             }
             state.message?.let {
@@ -292,7 +288,7 @@ fun EditItemScreen(navController: NavHostController, id: Long) {
             FieldLabel("Wears before washing")
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { vm.edit { it.copy(wearsBeforeWash = (it.wearsBeforeWash - 1).coerceAtLeast(0)) } }) {
-                    Icon(Icons.Outlined.Remove, contentDescription = "Fewer wears")
+                    Icon(HangerIcons.Remove, contentDescription = "Fewer wears")
                 }
                 Text(
                     if (form.wearsBeforeWash == 0) "Never needs a wash" else "${form.wearsBeforeWash}",
@@ -300,7 +296,7 @@ fun EditItemScreen(navController: NavHostController, id: Long) {
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
                 IconButton(onClick = { vm.edit { it.copy(wearsBeforeWash = (it.wearsBeforeWash + 1).coerceAtMost(30)) } }) {
-                    Icon(Icons.Outlined.Add, contentDescription = "More wears")
+                    Icon(HangerIcons.Add, contentDescription = "More wears")
                 }
             }
 

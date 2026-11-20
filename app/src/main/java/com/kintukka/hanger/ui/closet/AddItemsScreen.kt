@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.HangerFilterChip
 
 import android.net.Uri
@@ -18,11 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -191,7 +188,7 @@ fun AddItemsScreen(navController: NavHostController) {
             TopAppBar(
                 title = { Text(if (state.processing) "Processing photos…" else "Review ${plural(state.drafts.count { it.ready }, "item")}") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
             )
         },
@@ -286,7 +283,7 @@ private fun DraftCard(draft: Draft, image: File?, onEdit: ((Draft) -> Draft) -> 
                         }
                     }
                 }
-                IconButton(onClick = onRemove) { Icon(Icons.Outlined.Delete, contentDescription = "Remove this photo") }
+                IconButton(onClick = onRemove) { Icon(HangerIcons.Delete, contentDescription = "Remove this photo") }
             }
 
             if (draft.ready) {
@@ -307,7 +304,7 @@ private fun DraftCard(draft: Draft, image: File?, onEdit: ((Draft) -> Draft) -> 
                     modifier = Modifier.padding(top = 10.dp),
                 )
                 TextButton(onClick = { expanded = !expanded }, modifier = Modifier.padding(top = 2.dp)) {
-                    Icon(if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
+                    Icon(if (expanded) HangerIcons.ChevronUp else HangerIcons.ChevronDown, contentDescription = null)
                     Spacer(Modifier.size(6.dp))
                     Text(if (expanded) "Fewer details" else "Pattern, formality, warmth, seasons")
                 }

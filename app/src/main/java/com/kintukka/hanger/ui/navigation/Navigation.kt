@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.navigation
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
@@ -34,17 +36,6 @@ import com.kintukka.hanger.ui.components.Hanger
 import com.kintukka.hanger.ui.components.LocalWindowWidth
 import com.kintukka.hanger.ui.components.WindowWidth
 import com.kintukka.hanger.ui.components.windowWidthFor
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Checkroom
-import androidx.compose.material.icons.filled.Insights
-import androidx.compose.material.icons.filled.Style
-import androidx.compose.material.icons.filled.WbSunny
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Checkroom
-import androidx.compose.material.icons.outlined.Insights
-import androidx.compose.material.icons.outlined.Style
-import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -125,11 +116,11 @@ fun LocalDate?.toEpochOrNone(): Long = this?.toEpochDay() ?: NO_DATE
 private data class Tab(val route: Any, val routeClass: KClass<*>, val label: String, val icon: ImageVector, val selectedIcon: ImageVector)
 
 private val tabs = listOf(
-    Tab(TodayRoute, TodayRoute::class, "Today", Icons.Outlined.WbSunny, Icons.Filled.WbSunny),
-    Tab(ClosetRoute, ClosetRoute::class, "Closet", Icons.Outlined.Checkroom, Icons.Filled.Checkroom),
-    Tab(OutfitsRoute, OutfitsRoute::class, "Outfits", Icons.Outlined.Style, Icons.Filled.Style),
-    Tab(PlannerRoute, PlannerRoute::class, "Plan", Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
-    Tab(InsightsRoute, InsightsRoute::class, "Insights", Icons.Outlined.Insights, Icons.Filled.Insights),
+    Tab(TodayRoute, TodayRoute::class, "Today", HangerIcons.Sun, HangerIcons.TodayFilled),
+    Tab(ClosetRoute, ClosetRoute::class, "Closet", HangerIcons.Hanger, HangerIcons.HangerFilled),
+    Tab(OutfitsRoute, OutfitsRoute::class, "Outfits", HangerIcons.Outfit, HangerIcons.OutfitFilled),
+    Tab(PlannerRoute, PlannerRoute::class, "Plan", HangerIcons.Calendar, HangerIcons.CalendarFilled),
+    Tab(InsightsRoute, InsightsRoute::class, "Insights", HangerIcons.Insights, HangerIcons.InsightsFilled),
 )
 
 @Composable

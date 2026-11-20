@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.icons.HangerIcons
+
 import com.kintukka.hanger.ui.components.bleedHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,10 +20,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items as rowItems
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -133,12 +131,12 @@ fun CapsuleScreen(navController: NavHostController, id: Long) {
             TopAppBar(
                 title = { Text(capsule?.entity?.name ?: "Capsule") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
+                    IconButton(onClick = { navController.popBackStack() }) { Icon(HangerIcons.Back, contentDescription = "Back") }
                 },
                 actions = {
-                    IconButton(onClick = { renaming = true }) { Icon(Icons.Outlined.DriveFileRenameOutline, contentDescription = "Rename capsule") }
+                    IconButton(onClick = { renaming = true }) { Icon(HangerIcons.Rename, contentDescription = "Rename capsule") }
                     IconButton(onClick = { leaving = true; vm.delete { navController.popBackStack() } }) {
-                        Icon(Icons.Outlined.Delete, contentDescription = "Delete capsule")
+                        Icon(HangerIcons.Delete, contentDescription = "Delete capsule")
                     }
                 },
             )
