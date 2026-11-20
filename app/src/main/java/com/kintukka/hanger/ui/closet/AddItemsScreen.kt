@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -271,8 +273,8 @@ private fun DraftCard(draft: Draft, image: File?, onEdit: ((Draft) -> Draft) -> 
                         ItemNameField(draft.form, onEdit = { transform -> onEdit { it.copy(form = transform(it.form)) } })
                         if (draft.processed?.cutoutFile != null) {
                             Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                FilterChip(selected = draft.useCutout, onClick = { onEdit { it.copy(useCutout = true) } }, label = { Text("Cut-out") })
-                                FilterChip(selected = !draft.useCutout, onClick = { onEdit { it.copy(useCutout = false) } }, label = { Text("Original") })
+                                HangerFilterChip(selected = draft.useCutout, onClick = { onEdit { it.copy(useCutout = true) } }, label = { Text("Cut-out") })
+                                HangerFilterChip(selected = !draft.useCutout, onClick = { onEdit { it.copy(useCutout = false) } }, label = { Text("Original") })
                             }
                         } else if (draft.processed != null) {
                             Text(

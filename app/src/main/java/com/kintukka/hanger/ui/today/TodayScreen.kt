@@ -1,5 +1,30 @@
 package com.kintukka.hanger.ui.today
 
+import com.kintukka.hanger.ui.components.pressScale
+import com.kintukka.hanger.ui.components.HangerCard
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -203,7 +228,7 @@ fun TodayScreen(navController: NavHostController) {
                         Text(
                             greeting(now).uppercase(),
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(1f),
                         )
                         IconButton(onClick = { navController.navigate(com.kintukka.hanger.ui.navigation.StyleGuideRoute) }) {
@@ -213,16 +238,16 @@ fun TodayScreen(navController: NavHostController) {
                             Icon(Icons.Outlined.Settings, contentDescription = "Settings")
                         }
                     }
-                    Text(if (showTomorrow) "Tomorrow" else "Today", style = MaterialTheme.typography.displayMedium)
+                    Text(if (showTomorrow) "Tomorrow" else "Today", style = MaterialTheme.typography.displayLarge, modifier = Modifier.semantics { heading() })
                     Text(
                         date.longLabel(),
                         style = MaterialTheme.typography.headlineSmall.copy(fontStyle = FontStyle.Italic),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (eveningMode || showTomorrow) {
-                        SingleChoiceSegmentedButtonRow(Modifier.padding(top = 12.dp)) {
-                            SegmentedButton(selected = !showTomorrow, onClick = { showTomorrow = false }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("Today") }
-                            SegmentedButton(selected = showTomorrow, onClick = { showTomorrow = true }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("Tomorrow") }
+                        SingleChoiceSegmentedButtonRow(Modifier.padding(top = 16.dp).widthIn(max = 320.dp).fillMaxWidth()) {
+                            HangerSegmentedButton(selected = !showTomorrow, onClick = { showTomorrow = false }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("Today") }
+                            HangerSegmentedButton(selected = showTomorrow, onClick = { showTomorrow = true }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("Tomorrow") }
                         }
                     }
                 }
@@ -265,17 +290,22 @@ fun TodayScreen(navController: NavHostController) {
                 item(key = "laundry") {
                     Surface(
                         color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = MaterialTheme.shapes.large,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                     ) {
-                        Row(Modifier.padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp))
+                        Row(Modifier.padding(start = 12.dp, end = 8.dp, top = 10.dp, bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                Modifier.size(36.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = HangerTokens.extras.laundry, modifier = Modifier.size(20.dp))
+                            }
                             Text(
                                 "${plural(state.dirty, "piece")} in the laundry — they're left out of ideas",
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.weight(1f).padding(start = 10.dp),
+                                modifier = Modifier.weight(1f).padding(start = 12.dp, end = 8.dp),
                             )
-                            TextButton(onClick = vm::washAll) { Text("Washed") }
+                            FilledTonalButton(onClick = vm::washAll, modifier = Modifier.height(40.dp)) { Text("Washed") }
                         }
                     }
                 }
@@ -287,10 +317,10 @@ fun TodayScreen(navController: NavHostController) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 if (state.entries.isEmpty()) "What to wear" else "Or try something else",
-                                style = MaterialTheme.typography.headlineMedium,
+                                style = MaterialTheme.typography.headlineLarge,
                                 modifier = Modifier.weight(1f),
                             )
-                            IconButton(onClick = suggestVm::more) { Icon(Icons.Outlined.Refresh, contentDescription = "New ideas") }
+                            FilledTonalIconButton(onClick = suggestVm::more) { Icon(Icons.Outlined.Refresh, contentDescription = "New ideas") }
                         }
                         SuggestHeader(ideas.copy(weather = null), onOccasion = suggestVm::setOccasion, onClearAnchor = null, showDate = false)
                     }
@@ -310,8 +340,9 @@ fun TodayScreen(navController: NavHostController) {
                             val pager = rememberPagerState { ideas.suggestions.size }
                             HorizontalPager(
                                 state = pager,
-                                contentPadding = PaddingValues(horizontal = 32.dp),
+                                contentPadding = PaddingValues(horizontal = 28.dp),
                                 pageSpacing = 12.dp,
+                                pageSize = ideaPageSize,
                                 key = { ideas.suggestions[it].signature },
                             ) { page ->
                                 val s = ideas.suggestions[page]
@@ -359,6 +390,12 @@ fun TodayScreen(navController: NavHostController) {
     }
 }
 
+private val ideaPageSize = object : PageSize {
+    // One card per page on phones (with the next one peeking), fixed-width cards side by side on wide screens.
+    override fun Density.calculateMainAxisPageSize(availableSpace: Int, pageSpacing: Int): Int =
+        if (availableSpace > 560.dp.roundToPx()) 360.dp.roundToPx() else availableSpace
+}
+
 @Composable
 private fun appSettingsHour(): Int {
     val container = com.kintukka.hanger.ui.appContainer()
@@ -375,46 +412,80 @@ private fun greeting(now: LocalTime): String = when (now.hour) {
 @Composable
 private fun WeatherCard(state: TodayUi, onRefresh: () -> Unit, onSetLocation: () -> Unit, modifier: Modifier = Modifier) {
     val s = state.settings
-    Card(
+    val cs = MaterialTheme.colorScheme
+    val gradient = Brush.linearGradient(listOf(cs.secondaryContainer, cs.primaryContainer.copy(alpha = 0.85f)))
+    Surface(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer),
+        color = Color.Transparent,
+        contentColor = cs.onSecondaryContainer,
     ) {
-        if (!s.hasLocation) {
-            Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Outlined.LocationOn, contentDescription = null)
-                Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
-                    Text("Dress for the weather", style = MaterialTheme.typography.titleMedium)
-                    Text("Set your location and ideas adapt to the forecast.", style = MaterialTheme.typography.bodyMedium)
+        Box(Modifier.background(gradient)) {
+            if (!s.hasLocation) {
+                Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
+                    WeatherBadge(Icons.Outlined.LocationOn)
+                    Column(Modifier.weight(1f).padding(horizontal = 14.dp)) {
+                        Text("Dress for the weather", style = MaterialTheme.typography.titleMedium)
+                        Text("Set your location and ideas adapt to the forecast.", style = MaterialTheme.typography.bodyMedium)
+                    }
+                    FilledTonalButton(onClick = onSetLocation) { Text("Set") }
                 }
-                TextButton(onClick = onSetLocation) { Text("Set") }
+                return@Box
             }
-            return@Card
-        }
-        val w = state.weather
-        Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(weatherIcon(w?.condition), contentDescription = null, modifier = Modifier.size(44.dp))
-            Column(Modifier.weight(1f).padding(start = 14.dp)) {
+            val w = state.weather
+            Column(Modifier.padding(start = 20.dp, end = 8.dp, top = 16.dp, bottom = 20.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Outlined.LocationOn, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Text(
+                        s.locationName.orEmpty().ifBlank { "Your location" },
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.weight(1f).padding(start = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    IconButton(onClick = onRefresh) { Icon(Icons.Outlined.Refresh, contentDescription = "Refresh forecast", modifier = Modifier.size(20.dp)) }
+                }
                 if (w == null) {
-                    Text(if (state.weatherLoading) "Checking the forecast…" else "Forecast unavailable", style = MaterialTheme.typography.titleMedium)
-                    Text(s.locationName.orEmpty(), style = MaterialTheme.typography.bodyMedium)
-                } else {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Text("${formatTemp(w.tempMaxC, s.tempUnit)}", style = MaterialTheme.typography.displaySmall)
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 12.dp)) {
+                        WeatherBadge(weatherIcon(null))
                         Text(
-                            "  / ${formatTemp(w.tempMinC, s.tempUnit)} · ${w.condition.label}",
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier.padding(bottom = 6.dp),
+                            if (state.weatherLoading) "Checking the forecast…" else "Forecast unavailable",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = 14.dp),
                         )
                     }
+                } else {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 12.dp)) {
+                        Text(formatTemp(w.tempMaxC, s.tempUnit), style = MaterialTheme.typography.displayLarge.copy(fontSize = 64.sp, lineHeight = 64.sp))
+                        Column(Modifier.weight(1f).padding(start = 12.dp)) {
+                            Text(w.condition.label, style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "Low ${formatTemp(w.tempMinC, s.tempUnit)} · ${w.precipitationProbability}% rain",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LocalContentColor.current.copy(alpha = 0.8f),
+                            )
+                        }
+                        WeatherBadge(weatherIcon(w.condition), large = true)
+                    }
                     val summary = runCatching { WeatherAdvisor.needs(w.wearing).summary }.getOrNull()
-                    Text(summary ?: "${w.precipitationProbability}% chance of rain", style = MaterialTheme.typography.bodyMedium)
-                    com.kintukka.hanger.ui.guide.WeatherAdviceLine(w.wearing, Modifier.padding(top = 4.dp))
-                    Text(s.locationName.orEmpty(), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 4.dp))
+                    HorizontalDivider(Modifier.padding(top = 14.dp, bottom = 12.dp, end = 12.dp), color = LocalContentColor.current.copy(alpha = 0.12f))
+                    Column(Modifier.padding(end = 12.dp)) {
+                        if (summary != null) Text(summary, style = MaterialTheme.typography.titleSmall)
+                        com.kintukka.hanger.ui.guide.WeatherAdviceLine(w.wearing, Modifier.padding(top = 4.dp))
+                    }
                 }
             }
-            IconButton(onClick = onRefresh) { Icon(Icons.Outlined.Refresh, contentDescription = "Refresh forecast") }
         }
+    }
+}
+
+@Composable
+private fun WeatherBadge(icon: ImageVector, large: Boolean = false) {
+    Box(
+        Modifier.size(if (large) 56.dp else 44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.7f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(if (large) 30.dp else 22.dp))
     }
 }
 
@@ -425,15 +496,29 @@ private fun WelcomeCard(loading: Boolean, onAdd: () -> Unit, onDemo: () -> Unit,
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
     ) {
-        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Icon(Icons.Outlined.Checkroom, contentDescription = null, modifier = Modifier.size(32.dp))
-            Text("Your closet, in your pocket", style = MaterialTheme.typography.headlineMedium)
+        Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(
+                Modifier.size(52.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                contentAlignment = Alignment.Center,
+            ) { Icon(Icons.Outlined.Checkroom, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp)) }
+            Text("Your closet, in your pocket", style = MaterialTheme.typography.headlineLarge)
             Text(
                 "Photograph your clothes and Hanger cuts them out, tags their colours and starts suggesting outfits for the weather and your plans. Everything stays on this phone.",
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().height(50.dp)) { Text("Add my first pieces") }
-            OutlinedButton(onClick = onDemo, enabled = !loading, modifier = Modifier.fillMaxWidth().height(50.dp)) {
+            Spacer(Modifier.height(4.dp))
+            Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().height(52.dp)) {
+                Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Add my first pieces")
+            }
+            OutlinedButton(
+                onClick = onDemo,
+                enabled = !loading,
+                modifier = Modifier.fillMaxWidth().height(52.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f)),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
+            ) {
                 Text(if (loading) "Setting up the demo closet…" else "Explore with a demo closet")
             }
         }
@@ -443,36 +528,44 @@ private fun WelcomeCard(loading: Boolean, onAdd: () -> Unit, onDemo: () -> Unit,
 @Composable
 private fun PlannedCard(entry: DayEntry, state: TodayUi, tomorrow: Boolean, onWear: () -> Unit, onOpen: () -> Unit, modifier: Modifier = Modifier) {
     val outfit = entry.entity.outfitId?.let { state.outfits[it] }
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        onClick = onOpen,
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-    ) {
-        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.width(110.dp)) {
+    HangerCard(modifier = modifier.fillMaxWidth(), onClick = onOpen, shape = MaterialTheme.shapes.extraLarge) {
+        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.width(120.dp)) {
                 if (outfit != null) OutfitCollage(outfit.placements, state.items, Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.large)
                 else ItemsCollage(entry.itemIds, state.items, Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.large)
             }
-            Column(Modifier.weight(1f).padding(start = 14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(Modifier.weight(1f).padding(start = 16.dp, end = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Surface(
+                    color = if (entry.worn) HangerTokens.extras.success.copy(alpha = 0.14f) else MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = if (entry.worn) HangerTokens.extras.success else MaterialTheme.colorScheme.onPrimaryContainer,
+                    shape = CircleShape,
+                ) {
+                    Text(
+                        when {
+                            entry.worn -> "Wearing today"
+                            tomorrow -> "Planned for tomorrow"
+                            else -> "Planned for today"
+                        }.uppercase(),
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 0.6.sp),
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    )
+                }
                 Text(
-                    when {
-                        entry.worn -> "Wearing today"
-                        tomorrow -> "Planned for tomorrow"
-                        else -> "Planned for today"
-                    }.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary,
+                    outfit?.name ?: entry.itemIds.mapNotNull { state.items[it]?.name }.take(3).joinToString(" · "),
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Text(outfit?.name ?: entry.itemIds.mapNotNull { state.items[it]?.name }.take(3).joinToString(" · "), style = MaterialTheme.typography.titleMedium)
                 if (!entry.worn && !tomorrow) {
-                    Button(onClick = onWear, modifier = Modifier.padding(top = 6.dp)) {
+                    Button(onClick = onWear, modifier = Modifier.padding(top = 4.dp).height(44.dp), contentPadding = PaddingValues(horizontal = 16.dp)) {
                         Icon(Icons.Outlined.TaskAlt, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(6.dp))
                         Text("I'm wearing it")
                     }
                 } else if (entry.worn) {
                     Text("Logged · laundry updated", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                } else {
+                    Text("Tap to change the plan", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -481,10 +574,21 @@ private fun PlannedCard(entry: DayEntry, state: TodayUi, tomorrow: Boolean, onWe
 
 @Composable
 private fun QuickTile(icon: ImageVector, label: String, modifier: Modifier, onClick: () -> Unit) {
-    Surface(onClick = onClick, color = MaterialTheme.colorScheme.surfaceContainer, shape = MaterialTheme.shapes.large, modifier = modifier) {
+    val interaction = remember { MutableInteractionSource() }
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
+        shape = MaterialTheme.shapes.large,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        interactionSource = interaction,
+        modifier = modifier.pressScale(interaction),
+    ) {
         Column(Modifier.padding(vertical = 16.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Text(label, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 6.dp))
+            Box(
+                Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center,
+            ) { Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(22.dp)) }
+            Text(label, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }
@@ -493,10 +597,8 @@ private fun QuickTile(icon: ImageVector, label: String, modifier: Modifier, onCl
 private fun ForgottenCard(item: Item, modifier: Modifier = Modifier, onStyle: () -> Unit) {
     Column(modifier) {
         SectionHeader("Forgotten gem")
-        Card(
+        HangerCard(
             onClick = onStyle,
-            shape = MaterialTheme.shapes.large,
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         ) {
             Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -511,7 +613,10 @@ private fun ForgottenCard(item: Item, modifier: Modifier = Modifier, onStyle: ()
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Icon(Icons.Outlined.AutoAwesome, contentDescription = "Style it", tint = MaterialTheme.colorScheme.primary)
+                Box(
+                    Modifier.size(40.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) { Icon(Icons.Outlined.AutoAwesome, contentDescription = "Style it", tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(20.dp)) }
             }
         }
     }

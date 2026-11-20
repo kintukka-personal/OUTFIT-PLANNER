@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.guide
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -112,9 +114,9 @@ fun StyleGuideScreen(navController: NavHostController) {
                         IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back") }
                     },
                 )
-                PrimaryScrollableTabRow(selectedTabIndex = tab, edgePadding = 12.dp) {
+                PrimaryScrollableTabRow(selectedTabIndex = tab, edgePadding = 8.dp, containerColor = MaterialTheme.colorScheme.background, divider = { HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant) }) {
                     TABS.forEachIndexed { i, label ->
-                        Tab(selected = tab == i, onClick = { tab = i }, text = { Text(label) }, modifier = Modifier.testTag("guide-tab-$label"))
+                        Tab(selected = tab == i, onClick = { tab = i }, text = { Text(label, style = MaterialTheme.typography.titleSmall) }, selectedContentColor = MaterialTheme.colorScheme.primary, unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.testTag("guide-tab-$label"))
                     }
                 }
             }
@@ -349,8 +351,8 @@ private fun LazyListScope.formulas(
     val all = StyleGuide.knowledge.formulas.filter(::fits)
     item(key = "occ-filter") {
         LazyRow(contentPadding = PaddingValues(horizontal = Page), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            item { FilterChip(selected = occasion == null, onClick = { onOccasion(null) }, label = { Text("All") }) }
-            items(Occasion.entries) { o -> FilterChip(selected = occasion == o, onClick = { onOccasion(if (occasion == o) null else o) }, label = { Text(o.label) }) }
+            item { HangerFilterChip(selected = occasion == null, onClick = { onOccasion(null) }, label = { Text("All") }) }
+            items(Occasion.entries) { o -> HangerFilterChip(selected = occasion == o, onClick = { onOccasion(if (occasion == o) null else o) }, label = { Text(o.label) }) }
         }
     }
     item(key = "ready-h") { SectionHeader("Ready to wear · ${ready.size}", Modifier.padding(horizontal = Page)) }

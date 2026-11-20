@@ -2,6 +2,8 @@
 
 package com.kintukka.hanger.ui.planner
 
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -260,7 +262,7 @@ private fun PlannerTabs(selected: Int, onSelect: (Int) -> Unit, modifier: Modifi
     val options = listOf("Calendar" to Icons.Outlined.CalendarMonth, "Trips" to Icons.Outlined.Luggage)
     SingleChoiceSegmentedButtonRow(modifier.fillMaxWidth()) {
         options.forEachIndexed { index, (label, icon) ->
-            SegmentedButton(
+            HangerSegmentedButton(
                 selected = selected == index,
                 onClick = { onSelect(index) },
                 shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
@@ -425,9 +427,9 @@ private fun DayCell(
     ) {
         Box(
             Modifier
-                .size(28.dp)
+                .size(30.dp)
                 .clip(CircleShape)
-                .background(if (isToday) scheme.primaryContainer else Color.Transparent)
+                .background(if (isToday) scheme.primary else Color.Transparent)
                 .clearAndSetSemantics { },
             contentAlignment = Alignment.Center,
         ) {
@@ -435,7 +437,7 @@ private fun DayCell(
                 date.dayOfMonth.toString(),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = if (isToday) FontWeight.Bold else FontWeight.Medium,
-                color = if (isToday) scheme.onPrimaryContainer else scheme.onSurface,
+                color = if (isToday) scheme.onPrimary else scheme.onSurface,
             )
         }
         if (mark != null) {

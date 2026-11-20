@@ -23,6 +23,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ripple
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Grain
@@ -96,7 +104,7 @@ object ImageLoading {
     @Volatile var synchronous: Boolean = false
 }
 
-/** Square closet tile: warm backdrop, centred garment, status markers. */
+/** Square closet tile: warm backdrop, centred garment, status markers, press feedback. */
 @Composable
 fun ItemTile(
     item: Item,
@@ -107,10 +115,12 @@ fun ItemTile(
     onClick: (() -> Unit)? = null,
 ) {
     val extras = HangerTokens.extras
+    val interaction = remember { MutableInteractionSource() }
     Column(
         modifier
+            .then(if (onClick != null) Modifier.pressScale(interaction) else Modifier)
             .clip(MaterialTheme.shapes.medium)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+            .then(if (onClick != null) Modifier.clickable(interactionSource = interaction, indication = ripple(), onClick = onClick) else Modifier),
     ) {
         Box(
             Modifier
@@ -121,41 +131,38 @@ fun ItemTile(
                 .then(if (selected) Modifier.border(BorderStroke(2.5.dp, MaterialTheme.colorScheme.primary), MaterialTheme.shapes.medium) else Modifier)
                 .semantics { contentDescription = item.name + if (item.status != GarmentStatus.CLEAN) ", ${item.status.label}" else "" },
         ) {
-            ItemImage(item, Modifier.fillMaxSize().padding(10.dp))
+            ItemImage(item, Modifier.fillMaxSize().padding(12.dp))
             if (item.status == GarmentStatus.DIRTY) {
-                Icon(
-                    Icons.Outlined.LocalLaundryService,
-                    contentDescription = null,
-                    tint = extras.laundry,
-                    modifier = Modifier.align(Alignment.TopStart).padding(6.dp).size(16.dp),
-                )
+                StatusBubble(Modifier.align(Alignment.TopStart).padding(6.dp)) {
+                    Icon(Icons.Outlined.LocalLaundryService, contentDescription = null, tint = extras.laundry, modifier = Modifier.size(14.dp))
+                }
             } else if (item.status == GarmentStatus.AWAY) {
-                Text(
-                    "Away",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.align(Alignment.TopStart).padding(6.dp),
-                )
+                StatusBubble(Modifier.align(Alignment.TopStart).padding(6.dp)) {
+                    Text("Away", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 4.dp))
+                }
             }
             if (item.entity.favorite) {
-                Icon(
-                    Icons.Filled.Favorite,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.align(Alignment.TopEnd).padding(6.dp).size(14.dp),
-                )
+                StatusBubble(Modifier.align(Alignment.TopEnd).padding(6.dp)) {
+                    Icon(Icons.Filled.Favorite, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(12.dp))
+                }
+            }
+            if (selected) {
+                Box(
+                    Modifier.align(Alignment.BottomStart).padding(6.dp).size(22.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary),
+                    contentAlignment = Alignment.Center,
+                ) { Icon(Icons.Filled.Check, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp)) }
             }
             if (badge != null) {
                 Surface(
                     color = MaterialTheme.colorScheme.inverseSurface,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = CircleShape,
                     modifier = Modifier.align(Alignment.BottomEnd).padding(6.dp),
                 ) {
                     Text(
                         badge,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.inverseOnSurface,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                     )
                 }
             }
@@ -163,12 +170,25 @@ fun ItemTile(
         if (showName) {
             Text(
                 item.name,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(top = 6.dp, start = 2.dp, end = 2.dp),
+                modifier = Modifier.padding(top = 6.dp, start = 4.dp, end = 4.dp, bottom = 2.dp),
             )
         }
+    }
+}
+
+/** Small frosted bubble for status markers on tiles, so icons stay legible over any garment. */
+@Composable
+private fun StatusBubble(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.92f),
+        shape = CircleShape,
+        modifier = modifier,
+    ) {
+        Box(Modifier.padding(5.dp), contentAlignment = Alignment.Center) { content() }
     }
 }
 
@@ -186,12 +206,15 @@ fun ColorDot(color: FashionColor, size: Dp = 14.dp, modifier: Modifier = Modifie
 @Composable
 fun SectionHeader(title: String, modifier: Modifier = Modifier, action: String? = null, onAction: (() -> Unit)? = null) {
     Row(
-        modifier.fillMaxWidth().padding(top = 8.dp),
+        modifier.fillMaxWidth().padding(top = 12.dp).heightIn(min = 40.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+        Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f).semantics { heading() })
         if (action != null && onAction != null) {
-            TextButton(onClick = onAction, contentPadding = PaddingValues(horizontal = 8.dp)) { Text(action) }
+            TextButton(onClick = onAction, contentPadding = PaddingValues(horizontal = 12.dp)) {
+                Text(action)
+                Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null, modifier = Modifier.padding(start = 4.dp).size(16.dp))
+            }
         }
     }
 }
@@ -199,17 +222,17 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier, action: String? 
 /** Big editorial page title used at the top of each tab. */
 @Composable
 fun PageTitle(title: String, modifier: Modifier = Modifier, subtitle: String? = null, trailing: @Composable (() -> Unit)? = null) {
-    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+    Row(modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.Bottom) {
         Column(Modifier.weight(1f)) {
             if (subtitle != null) {
                 Text(
                     subtitle.uppercase(),
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.primary,
                 )
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(4.dp))
             }
-            Text(title, style = MaterialTheme.typography.displaySmall)
+            Text(title, style = MaterialTheme.typography.displaySmall, modifier = Modifier.semantics { heading() })
         }
         trailing?.invoke()
     }
@@ -224,25 +247,30 @@ fun EmptyState(
     action: (@Composable () -> Unit)? = null,
 ) {
     Column(
-        modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 40.dp),
+        modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
-            Modifier.size(72.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(34.dp))
+        Box(Modifier.size(104.dp), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxSize().clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)))
+            Box(
+                Modifier.size(76.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(34.dp))
+            }
         }
-        Text(title, style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+        Spacer(Modifier.height(4.dp))
+        Text(title, style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
         Text(
             body,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
+            modifier = Modifier.widthIn(max = 360.dp),
         )
         if (action != null) {
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(8.dp))
             action()
         }
     }
@@ -256,9 +284,15 @@ fun StatPill(label: String, value: String, modifier: Modifier = Modifier) {
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
-        Column(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
-            Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
-            Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 14.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(
+                value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(label, style = MaterialTheme.typography.labelMedium.copy(letterSpacing = 0.2.sp), color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
         }
     }
 }

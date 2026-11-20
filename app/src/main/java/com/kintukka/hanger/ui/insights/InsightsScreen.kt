@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -228,13 +229,13 @@ private fun StatGrid(state: InsightsUiState, modifier: Modifier = Modifier) {
     val cpw = state.averageCostPerWear?.let { formatMoney(it, state.currency) } ?: "—"
     val utilisation = state.utilisation90?.let { "${(it * 100).roundToInt()}%" } ?: "—"
     Column(modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatPill("Items", state.itemCount.toString(), Modifier.weight(1f))
-            StatPill("Closet value", value, Modifier.weight(1f))
+        com.kintukka.hanger.ui.components.EqualRow {
+            StatPill("Items", state.itemCount.toString(), Modifier.weight(1f).fillMaxHeight())
+            StatPill("Closet value", value, Modifier.weight(1f).fillMaxHeight())
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatPill("Avg cost per wear", cpw, Modifier.weight(1f))
-            StatPill("Worn in 90 days", utilisation, Modifier.weight(1f))
+        com.kintukka.hanger.ui.components.EqualRow {
+            StatPill("Avg cost per wear", cpw, Modifier.weight(1f).fillMaxHeight())
+            StatPill("Worn in 90 days", utilisation, Modifier.weight(1f).fillMaxHeight())
         }
         if (state.closetValue != null && state.itemsWithPrice < state.itemCount) {
             Text(

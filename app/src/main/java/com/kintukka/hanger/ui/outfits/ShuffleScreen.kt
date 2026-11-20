@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -280,15 +282,15 @@ fun ShuffleScreen(navController: NavHostController, date: LocalDate?) {
         ) {
             LazyRow(contentPadding = PaddingValues(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 val o = state.options
-                item { FilterChip(o.dressMode, { vm.setOptions { it.copy(dressMode = !it.dressMode) } }, { Text("Dress") }) }
-                item { FilterChip(o.layer, { vm.setOptions { it.copy(layer = !it.layer) } }, { Text("+ Layer") }) }
-                item { FilterChip(o.outerwear, { vm.setOptions { it.copy(outerwear = !it.outerwear) } }, { Text("+ Coat") }) }
-                item { FilterChip(o.bag, { vm.setOptions { it.copy(bag = !it.bag) } }, { Text("+ Bag") }) }
-                item { FilterChip(o.accessory, { vm.setOptions { it.copy(accessory = !it.accessory) } }, { Text("+ Accessory") }) }
-                item { FilterChip(o.smart, { vm.setOptions { it.copy(smart = !it.smart) } }, { Text("Smart match") }) }
-                item { FilterChip(o.leastWorn, { vm.setOptions { it.copy(leastWorn = !it.leastWorn) } }, { Text("Least worn") }) }
-                item { FilterChip(o.inSeason, { vm.setOptions { it.copy(inSeason = !it.inSeason) } }, { Text("In season") }) }
-                item { FilterChip(o.cleanOnly, { vm.setOptions { it.copy(cleanOnly = !it.cleanOnly) } }, { Text("Clean only") }) }
+                item { HangerFilterChip(o.dressMode, { vm.setOptions { it.copy(dressMode = !it.dressMode) } }, { Text("Dress") }) }
+                item { HangerFilterChip(o.layer, { vm.setOptions { it.copy(layer = !it.layer) } }, { Text("+ Layer") }) }
+                item { HangerFilterChip(o.outerwear, { vm.setOptions { it.copy(outerwear = !it.outerwear) } }, { Text("+ Coat") }) }
+                item { HangerFilterChip(o.bag, { vm.setOptions { it.copy(bag = !it.bag) } }, { Text("+ Bag") }) }
+                item { HangerFilterChip(o.accessory, { vm.setOptions { it.copy(accessory = !it.accessory) } }, { Text("+ Accessory") }) }
+                item { HangerFilterChip(o.smart, { vm.setOptions { it.copy(smart = !it.smart) } }, { Text("Smart match") }) }
+                item { HangerFilterChip(o.leastWorn, { vm.setOptions { it.copy(leastWorn = !it.leastWorn) } }, { Text("Least worn") }) }
+                item { HangerFilterChip(o.inSeason, { vm.setOptions { it.copy(inSeason = !it.inSeason) } }, { Text("In season") }) }
+                item { HangerFilterChip(o.cleanOnly, { vm.setOptions { it.copy(cleanOnly = !it.cleanOnly) } }, { Text("Clean only") }) }
             }
             Spacer(Modifier.height(8.dp))
             state.options.rows.forEach { category ->

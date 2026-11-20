@@ -1,5 +1,10 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.components.bleedHorizontally
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.layout.layout
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -252,7 +257,7 @@ fun SuggestScreen(navController: NavHostController, date: LocalDate?, anchorItem
                         )
                     }
                     item(key = "more") {
-                        OutlinedButton(onClick = vm::more, modifier = Modifier.fillMaxWidth()) {
+                        OutlinedButton(onClick = vm::more, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                             Icon(Icons.Outlined.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                             Text("Show me different ideas", modifier = Modifier.padding(start = 8.dp))
                         }
@@ -262,6 +267,9 @@ fun SuggestScreen(navController: NavHostController, date: LocalDate?, anchorItem
         }
     }
 }
+
+/** How far the occasion chips bleed past the header's own padding, to reach the screen edge. */
+private val chipBleed = 20.dp
 
 @Composable
 fun SuggestHeader(state: SuggestState, onOccasion: (Occasion) -> Unit, onClearAnchor: (() -> Unit)?, showDate: Boolean = true) {
@@ -285,9 +293,13 @@ fun SuggestHeader(state: SuggestState, onOccasion: (Occasion) -> Unit, onClearAn
                 trailingIcon = if (onClearAnchor != null) ({ Icon(Icons.Outlined.Close, contentDescription = "Stop building around this item", modifier = Modifier.size(16.dp)) }) else null,
             )
         }
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = chipBleed),
+            modifier = Modifier.bleedHorizontally(chipBleed),
+        ) {
             items(Occasion.entries, key = { it.name }) { o ->
-                FilterChip(selected = state.occasion == o, onClick = { onOccasion(o) }, label = { Text(o.label) })
+                HangerFilterChip(selected = state.occasion == o, onClick = { onOccasion(o) }, label = { Text(o.label) })
             }
         }
     }

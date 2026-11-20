@@ -1,5 +1,7 @@
 package com.kintukka.hanger.ui.closet
 
+import com.kintukka.hanger.ui.components.HangerFilterChip
+
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -327,7 +329,7 @@ private fun OrderBadge(number: Int) {
 @Composable
 fun PatternPicker(selected: Pattern, onSelect: (Pattern) -> Unit, modifier: Modifier = Modifier) {
     FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Pattern.entries.forEach { p -> FilterChip(selected = p == selected, onClick = { onSelect(p) }, label = { Text(p.label) }) }
+        Pattern.entries.forEach { p -> HangerFilterChip(selected = p == selected, onClick = { onSelect(p) }, label = { Text(p.label) }) }
     }
 }
 
@@ -335,9 +337,9 @@ fun PatternPicker(selected: Pattern, onSelect: (Pattern) -> Unit, modifier: Modi
 @Composable
 fun SeasonPicker(selected: Set<Season>, onChange: (Set<Season>) -> Unit, modifier: Modifier = Modifier) {
     FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        FilterChip(selected = selected.isEmpty(), onClick = { onChange(emptySet()) }, label = { Text("All year") })
+        HangerFilterChip(selected = selected.isEmpty(), onClick = { onChange(emptySet()) }, label = { Text("All year") })
         Season.entries.forEach { s ->
-            FilterChip(
+            HangerFilterChip(
                 selected = s in selected,
                 onClick = { onChange(if (s in selected) selected - s else selected + s) },
                 label = { Text(s.label) },

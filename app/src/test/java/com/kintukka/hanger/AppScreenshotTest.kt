@@ -206,3 +206,44 @@ class DarkModeScreenshotTest {
         compose.onRoot().captureRoboImage("screenshots/dark_outfits.png")
     }
 }
+
+/** The adaptive shell: navigation rail and centred content on tablets, bottom bar on a small phone. */
+@RunWith(AndroidJUnit4::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class ResponsiveScreenshotTest {
+    @get:Rule
+    val compose = createComposeRule()
+
+    private fun seed() {
+        val app = ApplicationProvider.getApplicationContext<HangerApp>()
+        ImageLoading.synchronous = true
+        runBlocking {
+            app.container.settings.setLocation("London", 51.5072, -0.1276)
+            app.container.settings.setWeatherCache(
+                WeatherRepository.cacheEntry(51.5072, -0.1276, System.currentTimeMillis(), TestFixtures.londonForecast()),
+            )
+            DemoCloset.load(app.container.db, app.container.images)
+        }
+    }
+
+    private fun settle() = repeat(4) { ShadowLooper.idleMainLooper(400, java.util.concurrent.TimeUnit.MILLISECONDS); compose.waitForIdle(); Thread.sleep(100) }
+
+    private fun walk(prefix: String) {
+        seed()
+        compose.setContent { HangerTheme(darkTheme = false) { HangerNavHost() } }
+        settle()
+        compose.onRoot().captureRoboImage("screenshots/${prefix}_today.png")
+        for (tab in listOf("Closet", "Outfits", "Plan", "Insights")) {
+            compose.onNodeWithTag("tab-$tab").performClick(); settle()
+            compose.onRoot().captureRoboImage("screenshots/${prefix}_${tab.lowercase()}.png")
+        }
+    }
+
+    @Test
+    @Config(sdk = [34], qualifiers = RobolectricDeviceQualifiers.MediumTablet)
+    fun tablet() = walk("tablet")
+
+    @Test
+    @Config(sdk = [34], qualifiers = "w360dp-h640dp-xhdpi")
+    fun smallPhone() = walk("small")
+}

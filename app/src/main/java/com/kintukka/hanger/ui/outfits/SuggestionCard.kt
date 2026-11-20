@@ -1,5 +1,12 @@
 package com.kintukka.hanger.ui.outfits
 
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,34 +54,33 @@ fun SuggestionCard(
     modifier: Modifier = Modifier,
     saved: Boolean = false,
 ) {
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-    ) {
+    com.kintukka.hanger.ui.components.HangerCard(modifier = modifier, shape = MaterialTheme.shapes.extraLarge) {
         Column(Modifier.padding(12.dp)) {
             ItemsCollage(suggestion.itemIds, items, Modifier.fillMaxWidth())
-            Spacer(Modifier.size(10.dp))
+            Spacer(Modifier.size(14.dp))
             Text(
                 suggestion.itemIds.mapNotNull { items[it]?.name }.joinToString(" · "),
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = 6.dp),
             )
             suggestion.reasons.take(3).forEach { reason ->
-                Row(Modifier.padding(start = 4.dp, top = 6.dp), verticalAlignment = Alignment.Top) {
-                    Text("—", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                    Spacer(Modifier.width(6.dp))
+                Row(Modifier.padding(start = 6.dp, end = 6.dp, top = 8.dp), verticalAlignment = Alignment.Top) {
+                    Box(
+                        Modifier.padding(top = 7.dp).size(5.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary),
+                    )
+                    Spacer(Modifier.width(10.dp))
                     Text(reason, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
-            Row(Modifier.fillMaxWidth().padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { onReact(if (reaction == Reaction.LIKED) Reaction.NONE else Reaction.LIKED) }) {
                     Icon(
                         if (reaction == Reaction.LIKED) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
                         contentDescription = "More like this",
                         tint = if (reaction == Reaction.LIKED) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp),
                     )
                 }
                 IconButton(onClick = { onReact(if (reaction == Reaction.DISLIKED) Reaction.NONE else Reaction.DISLIKED) }) {
@@ -82,14 +88,22 @@ fun SuggestionCard(
                         if (reaction == Reaction.DISLIKED) Icons.Filled.ThumbDown else Icons.Outlined.ThumbDown,
                         contentDescription = "Less like this",
                         tint = if (reaction == Reaction.DISLIKED) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp),
                     )
                 }
                 IconButton(onClick = onSave, enabled = !saved) {
-                    Icon(Icons.Outlined.BookmarkAdd, contentDescription = if (saved) "Saved" else "Save outfit")
+                    Icon(
+                        if (saved) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
+                        contentDescription = if (saved) "Saved" else "Save outfit",
+                        tint = if (saved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp),
+                    )
                 }
-                IconButton(onClick = onEdit) { Icon(Icons.Outlined.Edit, contentDescription = "Edit on canvas") }
+                IconButton(onClick = onEdit) {
+                    Icon(Icons.Outlined.Edit, contentDescription = "Edit on canvas", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
+                }
                 Spacer(Modifier.weight(1f))
-                Button(onClick = onPrimary) { Text(primaryLabel) }
+                Button(onClick = onPrimary, modifier = Modifier.height(44.dp), contentPadding = PaddingValues(horizontal = 18.dp)) { Text(primaryLabel) }
             }
         }
     }

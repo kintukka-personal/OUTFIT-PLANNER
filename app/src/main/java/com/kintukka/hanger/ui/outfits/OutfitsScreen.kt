@@ -1,5 +1,18 @@
 package com.kintukka.hanger.ui.outfits
 
+import com.kintukka.hanger.ui.components.pressScale
+import androidx.compose.material3.Button
+import androidx.compose.runtime.remember
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
+import com.kintukka.hanger.ui.components.bleedHorizontally
+import com.kintukka.hanger.ui.components.HangerFilterChip
+import com.kintukka.hanger.ui.components.HangerSegmentedButton
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -137,21 +150,21 @@ fun OutfitsScreen(navController: NavHostController) {
                 Spacer(Modifier.height(4.dp))
                 PageTitle("Outfits", subtitle = plural(state.outfits.size, "saved look"))
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    QuickAction(Icons.Outlined.Dashboard, "Build", "Canvas", Modifier.weight(1f)) { navController.navigate(BuilderRoute()) }
-                    QuickAction(Icons.Outlined.Shuffle, "Dress me", "Shuffle", Modifier.weight(1f)) { navController.navigate(ShuffleRoute()) }
-                    QuickAction(Icons.Outlined.AutoAwesome, "Ideas", "Stylist", Modifier.weight(1f)) { navController.navigate(SuggestRoute()) }
+                    QuickAction(Icons.Outlined.Dashboard, "Build", "Canvas", Modifier.weight(1f), MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) { navController.navigate(BuilderRoute()) }
+                    QuickAction(Icons.Outlined.Shuffle, "Dress me", "Shuffle", Modifier.weight(1f), MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.onSecondaryContainer) { navController.navigate(ShuffleRoute()) }
+                    QuickAction(Icons.Outlined.AutoAwesome, "Ideas", "Stylist", Modifier.weight(1f), MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer) { navController.navigate(SuggestRoute()) }
                 }
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     listOf("Saved outfits", "Capsules").forEachIndexed { i, label ->
-                        SegmentedButton(selected = tab == i, onClick = { tab = i }, shape = SegmentedButtonDefaults.itemShape(i, 2)) { Text(label) }
+                        HangerSegmentedButton(selected = tab == i, onClick = { tab = i }, shape = SegmentedButtonDefaults.itemShape(i, 2)) { Text(label) }
                     }
                 }
                 if (tab == 0) {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        item { FilterChip(selected = state.filter == null && !state.favourites, onClick = { vm.setFilter(null); if (state.favourites) vm.toggleFavourites() }, label = { Text("All") }) }
-                        item { FilterChip(selected = state.favourites, onClick = vm::toggleFavourites, label = { Text("Favourites") }) }
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(horizontal = 20.dp), modifier = Modifier.bleedHorizontally()) {
+                        item { HangerFilterChip(selected = state.filter == null && !state.favourites, onClick = { vm.setFilter(null); if (state.favourites) vm.toggleFavourites() }, label = { Text("All") }) }
+                        item { HangerFilterChip(selected = state.favourites, onClick = vm::toggleFavourites, label = { Text("Favourites") }) }
                         items(Occasion.entries, key = { it.name }) { o ->
-                            FilterChip(selected = state.filter == o, onClick = { vm.setFilter(if (state.filter == o) null else o) }, label = { Text(o.label) })
+                            HangerFilterChip(selected = state.filter == o, onClick = { vm.setFilter(if (state.filter == o) null else o) }, label = { Text(o.label) })
                         }
                     }
                 }
@@ -196,9 +209,9 @@ fun OutfitsScreen(navController: NavHostController) {
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    TextButton(onClick = { newCapsule = true }) {
+                    Button(onClick = { newCapsule = true }, modifier = Modifier.padding(top = 4.dp).height(48.dp)) {
                         Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Text("New capsule", modifier = Modifier.padding(start = 6.dp))
+                        Text("New capsule", modifier = Modifier.padding(start = 8.dp))
                     }
                 }
             }
@@ -226,19 +239,32 @@ fun OutfitsScreen(navController: NavHostController) {
 }
 
 @Composable
-private fun QuickAction(icon: ImageVector, title: String, subtitle: String, modifier: Modifier, onClick: () -> Unit) {
+private fun QuickAction(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    modifier: Modifier,
+    container: Color,
+    content: Color,
+    onClick: () -> Unit,
+) {
+    val interaction = remember { MutableInteractionSource() }
     Surface(
         onClick = onClick,
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        color = container,
+        contentColor = content,
         shape = MaterialTheme.shapes.large,
-        modifier = modifier,
+        interactionSource = interaction,
+        modifier = modifier.pressScale(interaction),
     ) {
         Column(Modifier.padding(14.dp)) {
-            Icon(icon, contentDescription = null)
-            Spacer(Modifier.height(10.dp))
-            Text(title, style = MaterialTheme.typography.titleSmall)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall)
+            Box(
+                Modifier.size(40.dp).clip(CircleShape).background(MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.75f)),
+                contentAlignment = Alignment.Center,
+            ) { Icon(icon, contentDescription = null, modifier = Modifier.size(22.dp)) }
+            Spacer(Modifier.height(14.dp))
+            Text(title, style = MaterialTheme.typography.titleSmall, maxLines = 1)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = content.copy(alpha = 0.75f), maxLines = 1)
         }
     }
 }
